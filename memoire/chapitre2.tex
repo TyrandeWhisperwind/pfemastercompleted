@@ -1,0 +1,197 @@
+\chapter{Classification et optimisation}
+\thispagestyle{empty}
+\newpage
+\section{Introduction}
+Depuis la naissance de l’internet et les réseaux sociaux, le volume des données digitales a connu une croissance rapide et exponentielle. Ces données sont principalement sous forme brute, et sans aucune structure définie avec des volumes de Teras Octets, d'où la nécessité des nouvelles méthodes optimisées pour la classification de ces données et extraire les informations pertinentes. Avec l’IA (Intelligence Artificielle), le monde de la recherche travaille pour introduire et développer de plus en plus ces méthodes pour atteindre de meilleurs résultats.
+
+Dans ce chapitre, nous allons introduire quelques méthodes de classifications et optimisations dont on s'est intéressé pour effectuer notre travail.       
+
+La structuration du chapitre est la suivante:
+\begin{itemize}
+	\item Classification supervisé et non supervisée,
+	\item Optimisation avec métaheurstiques,
+	\item Optimisation dans les système de recommandation,
+	\item Conclusion.
+\end{itemize}
+
+\section {classification}
+La classification est une répartition des êtres vivants, des objets, ou des notions sur plusieurs classes. C’est un processus utilisé dans la science en particulier afin d'effectuer des études et des analyses.
+En biologie par exemple, la classification est utilisée pour catégoriser les animaux, les végétaux, et plusieurs micro-organismes.
+
+La classification en informatique est un processus qui prend un ensemble de données brutes, et essaye de créer un modèle de classification, qui les répartis d’une façon correcte. Il existe plusieurs types de modèles de classification et qui sont divisés en deux catégories :
+
+\subsection{ Modèles supervisés}
+Un modèle de classification supervisé est construit en deux étapes:
+	\begin{enumerate}
+
+		\item L’apprentissage: dans cette étape on introduit en entrée au modèle un ensemble de données dont les classes sont connues au préalable, et à chaque  fois qu'on lui envoie une nouvelle instance pour qu'il effectue une prédiction de sa classe, on mesure la performance du modèle afin de l'ajuster, on répète ce processus jusqu'à ce qu'il commence à reconnaître les classes des données correctement.
+		
+		\item Le test: après la fin de l’étape d’apprentissage, on introduit au modèle un ensemble de données qu’il n’a jamais traité auparavant, une prédiction des classes des données est effectuée ensuite une mesure des performances. Quand le modèle reconnaît parfaitement les données qu’on lui donne ou s'il possède un taux d’erreur qui est considéré comme négligeable, on peut dire que le modèle est près pour l’utilisation commerciale.	
+	\end{enumerate}
+
+
+Dans un tel modèle, les classes et leurs nombres sont connus préalablement, donc le modèle ne va jamais reconnaître une instance ayant une nouvelle classe.
+
+Nous nous intéressons dans notre travail au modèle \textit{K-NN}, de ce fait nous allons le définir et expliquer son fonctionnement.
+
+\myparagraph{K-NN:}La méthode des K plus proches voisins est une méthode d’apprentissage supervisé. En abrégé K-NN, de l'anglais \textit{k-nearest neighbors}, inventé par Marcello Pelillo en 1967. Elle peut être utilisée aussi bien pour la régression que pour la classification. Son fonctionnement peut être assimilé à l’analogie suivante “dis moi qui sont tes voisins, je te dirais qui tu es”.
+Pour effectuer une prédiction, l’algorithme K-NN va se baser sur le jeu de données en entier, ceci peut être considéré comme l'ensemble d'entraînement pour l'algorithme, bien qu'un entraînement explicite ne soit pas particulièrement requis. En effet, pour une observation, qui ne fait pas parti du jeu de données, qu’on souhaite prédire, l’algorithme va chercher les K instances du jeu de données les plus proches de notre observation. Ensuite pour ces K voisins, l’algorithme se basera sur leurs variables de sortie (\textit{output variable}) pour calculer la valeur de la variable de l’observation qu’on souhaite prédire. 
+
+Par ailleurs  :
+\begin{itemize}
+	\item Si K-NN est utilisé pour la régression, c’est la moyenne (ou la médiane) des variables des K plus proches observations qui servira pour la prédiction
+	 \item Si K-NN est utilisé pour la classification, c’est le mode des variables des K plus proches observations qui servira pour la prédiction\cite{ref32}.
+\end{itemize}
+
+ \begin{algorithm}[H]
+	\caption{K-NN}
+	\hspace*{\algorithmicindent} \textbf{Entrée:} D: Dataset, K: nombre de voisins à considérer ;\\
+	\hspace*{\algorithmicindent} \textbf{Sortie:} K clusters ; \\
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+	\begin{itemize}
+		\item [] \textbf{Pour} une nouvelle observation X dont on veut prédire sa variable de sortie y \textbf{faire:}
+		\begin{itemize}
+			\item [] Calculer toutes les distances de cette observation X avec les autres observations du jeu de données D ;
+			\item [] Retenir les K observations du jeu de données D les proches de X en utilisation le fonction de calcul de distance d ;
+			\item [] Prendre les valeurs de y des K observations retenues: \begin{itemize}
+				\item [] Si on effectue une régression, calculer la moyenne (ou la médiane) de y retenues ;
+				\item [] Si on effectue une classification , calculer le mode de y retenues ; 	
+			\end{itemize}
+			\item [] Retourner la valeur calculée dans l’étape 3 comme étant la valeur qui a été prédite par K-NN pour l’observation X ;
+		\end{itemize}
+
+	\end{itemize}
+	\hspace*{\algorithmicindent}\textbf{ Fin.}
+\end{algorithm} 
+
+\subsection{ Modèles non supervisés \textit{(Clustering)}}
+Contrairement aux modèles supervisés, ils n'effectuent pas d’apprentissage, car ils sont censés deviner les classes des objets en trouvant les similarités et les différences entre les instances des données. On appelle la similarité/différence entre deux instances, la distance entre eux. Un ensemble d'éléments groupés sont appelés un cluster. La notion de cluster varie d’une application à une autre selon les besoins et les nécessités. Elle est généralement reliée au type de dataset, et les mesures de la distance entre les instances. Dans un tel modèle on n'est pas limité par le nombre de classes car on ne connaît pas les classes au préalable.
+
+Il y a plusieurs algorithmes qui font partie du domaine de la fouille de données (\textit{Data Mining}) qui s’adresse au problème de la classification non supervisée (\textit{clustering}). Les techniques et algorithmes de clustering sont très utilisés dans plusieurs domaines pour l’analyse des données.
+
+\subsubsection*{Les différents types de méthodes de cluestring}
+D’après Han et al.\cite{ref33}, les algorithmes de clustering sont divisés comme suit :\\
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%\setcounter{enumi}{1}
+	\item \textbf{Méthodes de partitionnements}
+\end{enumerate}\mbox{}\indent C’est l’approche la plus simple, étant donnée un nombre \textit{N}, elle consiste à partitionner le dataset en \textit{N} groupes ou clusters initialement. Après, une technique de re-locations est utilisée de façon itérative pour améliorer le partitionnement en déplaçant les instances d’un groupe à un autre. Le critère général pour un bon partitionnement est que les instances d’un même cluster soient proches, et les instances des différents clusters soient loin. Parmi les les algorithmes les plus connus: KNN, K-means, K-medoïds, CLARANS, ...etc.  \\
+
+
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{1}
+	\item \textbf{Méthodes hiérarchiques}
+\end{enumerate}\mbox{}\indent Elles consistent à créer une décomposition hiérarchique de l'ensemble de données et est classée comme étant soit agglomération ou division, en fonction de la formation de la décomposition hiérarchique. L’approche agglomérative, également appelée approche ascendante, commence par mettre chaque instance dans un groupe séparé puis des fusions successive sont effectuées sur les instances ou les groupes d'instances proches les uns aux autres jusqu'à ce que tous les groupes soient fusionnés en un seul (le niveau le plus élevé de la hiérarchie) ou une condition de terminaison est remplie. L’approche de division, également appelée la approche descendante, commence par mettre les instances dans un même cluster, puis à chaque itération, un cluster est divisé en clusters plus petits, jusqu'à ce que chaque instance soit finalement dans un cluster, ou une condition de terminaison est valide. 
+Les méthodes de classification hiérarchique peuvent être basées sur la distance ou sur la densité et la continuité. Les méthodes hiérarchiques souffrent du fait qu’une fois l’étape est terminée (fusion ou division), elle ne peut jamais être défaite. Cette rigidité est utile car elle conduit à des calculs plus petits. Parmi les algorithmes les plus connus: AGNES, et DIANA.\\
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{2}
+	\item \textbf{Méthodes basés sur la densité}
+\end{enumerate}\mbox{}\indent C’est une amélioration de la méthode de partitionnement. Dans les méthodes basées sur la  densité, un cluster continue à grandir à condition que le nombre d’instances dans un rayon de voisinage est supérieur à un seuil donné. Une telle méthode peut filtrer le bruit et les valeurs aberrantes. Parmi les algorithmes on mentionne \textit{DBSCAN}, et \textit{DENCLUE}.\\
+
+
+\subsubsection*{Quelque Algorithmes de clustering }
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%\setcounter{enumi}{1}
+	\item \textbf{K-means}
+\end{enumerate}\mbox{}\indent Étant donné un dataset et un nombre K de clusters, l’algorithme commence par choisir K instances aléatoires qui représentent les centroids initiaux et affecte le reste des instances aux clusters ayant le plus proche centroid. Après, il calcule les nouveaux centroids pour chaque cluster, et refait le processus jusqu'à ce qu'il n'y est plus de changement.
+Cet algorithme est très sensible aux données aberrantes, par conséquent il ne garantit pas l’optimum global, mais il a l'avantage de converger vers un optimum local quelles que soient les données initiales.
+Le calcul des centroids se fait en général par la moyenne. Étant donné un cluster, le centroid est une instance dont la valeur de chaque attribut est la moyenne des valeurs du même attribut des instances appartenant à ce cluster \cite{ref33}.
+ \begin{algorithm}[H]
+	\caption{k-means}
+	\hspace*{\algorithmicindent} \textbf{Entrée:} D: Dataset, K: nombre de cluster ;\\
+	\hspace*{\algorithmicindent} \textbf{Sortie:} K clusters ; \\
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+	\begin{itemize}
+		\item [] Choisir les centreoids initials à partir de D aléatoirement ;
+		
+		\item []\textbf{Répéter:}
+		\begin{itemize}
+			\item []\textbf{Pour} Chaque p de D \textbf{faire:} 
+			\begin{itemize}
+				\item [] Calculer la similarité entre p et les centroids  ;
+				\item [] Affecter p au cluster qui possède le plus proche centroids ;
+			\end{itemize}
+			\item []\textbf{Fait;}
+			\item [] Calculer les nouveaux centroids (la moyenne);
+		\end{itemize}
+	\end{itemize}
+	\hspace*{\algorithmicindent}\textbf{ Fin.}
+\end{algorithm} 
+\mbox{}\\
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{1}
+	\item \textbf{K-medoids}
+\end{enumerate}\mbox{}\indent C’est une amélioration  de K-means qui le rend plus efficace pour traiter les données aberrantes. K-medoid utilise comme centroids, des instances du dataset  appelé medoids. La base de cette approche est de trouver les K instances du dataset qui peuvent représenter les centres des clusters à former. 
+
+Une variation populaire de cette approche est \textit{PAM}(\textit{Partitioning Around Medoids}), cet algorithme commence par un choix aléatoire des medoïds à partir du dataset initial, et affecte les instances du dataset au cluster possédant le plus proche medoid, par la suite chaque medoid est remplacé soit d'une façon aléatoire ou avec heuristique, s'en suit un calcul du coût de remplacement, si le clustering est amélioré alors la permutation des medoids est gardée, et le processus est répété jusqu'à ce que aucun changement est effectué \cite{ref33}.
+
+
+ \begin{algorithm}[H]
+	\caption{k-medoids}
+	\hspace*{\algorithmicindent} \textbf{Entrée:} D: Dataset, K: nombre de cluster ;\\
+	\hspace*{\algorithmicindent} \textbf{Sortie:} K clusters ; \\
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+	\begin{itemize}
+			\item [] initialiser les K medoids aléatoirement ;
+		
+		\item []\textbf{Répéter:}
+		\begin{itemize}
+			\item [] Affecter les instances de D au cluster qui convient ;
+			\item []\textbf{Pour} Chaque p de D \textbf{faire:} 
+			\begin{itemize}
+			\item [] Calcul du coût S de swap d’un medoïd mj avec p ;
+			 \item []\textbf{Si:} S < 0 \textbf{Alors} swap mj avec p \textbf{Fsi} ;
+			\end{itemize}
+			\item []\textbf{Fait;}
+		\end{itemize}
+		\item []\textbf{Jusqu'à: }aucune changement ;
+		
+	\end{itemize}
+	\hspace*{\algorithmicindent}\textbf{ Fin.}
+\end{algorithm} 
+
+
+\section{Optimisation avec \textit{métaheuristiques}}
+
+Dans le but d’améliorer les performances du système  à implémenter et la qualité des résultats, on a choisi d'appliquer une technique d’optimisation appelée métaheuristiques.     
+
+Les métaheuristiques sont utilisées pour trouver des réponses à des problèmes dont on n'a que très peu d'éléments pour le résoudre, c'est a dire que nous ne savons pas à quoi ressemble la solution optimale, ni comment la trouver de manière raisonnée, il y a très peu de renseignements heuristiques et la recherche par force brute est impensable, car l'espace de recherche est trop grand. 
+Néanmoins, si une solution candidate au problème nous est fournie, nous sommes capables de la tester et d'évaluer sa qualité et de répéter le processus jusqu'à avoir la solution adéquate (taux d'erreur moindre).
+
+Un des algorithmes de métaheuristiques les plus simples, est la méthode de descente \textit{Hill-Climbing}: à partir d’un ensemble de valeurs prises aléatoirement, une petite modification aléatoire est effectuée. Si la modification améliore l’ensemble, on la garde, sinon elle est rejetée. Ce processus est effectué autant qu’il est possible. De nombreuses métaheuristiques sont essentiellement élaborées par des combinaisons de cette méthode et de la recherche aléatoire.
+
+\subsection{Bee Swarm Optimisation (BSO)}
+
+L'algorithme BSO (Bee Swarm Optimisation) est l'algorithme d'optimisation par essaim d'abeilles. BSO se base sur la simulation d’un ensemble d'abeilles qui cherche la nourriture. On suppose que l’espace de recherche est représenté par l’ensemble de solutions possibles, et la richesse de la nourriture par la qualité de la solution. Le processus naturel se déroule comme suit :
+\begin{itemize}
+\item L'abeille éclaireuse qui découvre une quantité de nectar et retourne à la ruche.
+\item Elle effectue ensuite une danse circulaire, pour signaler qu’elle a trouvé une source de nourriture.
+\item La danse qu’elle effectue dépend de la qualité de la source, et la distance entre la ruche et la source, ainsi que la direction \cite{ref34}.
+\end{itemize}
+
+Selon \cite{ref34}, voici le déroulement de l’algorithme BSO :
+\begin{enumerate}
+
+\item	On génère une solution aléatoire appelée \textit{Sref}(solution de référence).
+\item	On met \textit{Sref} dans une liste taboue.
+\item	À partir de \textit{Sref}, un ensemble de points est déterminé.
+\item	Chaque point généré est attribué à une abeille (recrutement).
+\item	Chacune des abeilles effectue une recherche locale commençant par le point qu’est lui y est attribué.
+\item	Les abeilles placent leurs meilleurs résultats dans un tableau pour les comparer.
+\item	La meilleure solution dans le tableau est choisie comme le nouveau point \textit{Sref}, et on réitère le processus depuis (2). 
+\end{enumerate}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{bso.PNG}
+	\caption{ Schéma expliquant le fonctionnement de BSO \cite{ref34} }
+\end{figure}
+\subsection{Optimisation dans les systèmes de recommandations}
+Il existe plusieurs approches pour l'incorporation des méthodes d’optimisation dans un système de recommandation, afin d’améliorer les résultats.
+L’une des approches est d’utiliser les caractéristiques des utilisateurs pour un filtrage collaboratif, et donner des priorités à ses caractéristiques en ajoutant des poids. Dans ce cas une métaheuristique peut être utilisée pour trouver les poids qui donnent un résultat optimal. Cette approche a été réaliser par \cite{ref31} qui ont utilisé l’algorithme PSO pour l’optimisation. Dans notre travail, on utilise les algorithmes de clustering pour la recommandation et afin d'obtenir les résultats les plus optimaux, on utilise aussi une métaheuristique pour affiner leurs paramètres et ainsi améliorer la qualité des prédictions.
+\section {Conclusion}
+Dans ce chapitre nous avons présenté quelques méthodes de classification et optimisation, et expliqué leurs fonctionnement, dans le prochain chapitre nous allons implémenter ces méthodes avec quelques types de filtrages choisi afin d'améliorer la qualité de prédiction effectuer par ces derniers.
+\input{chapitre3}

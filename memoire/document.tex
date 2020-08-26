@@ -1,0 +1,490 @@
+\documentclass[a4paper,12pt,letterpaper,headsepline,singlespacing,headsepline, french]{report}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{fixltx2e}
+\graphicspath{ {images/} }
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{enumerate}
+\usepackage{titlesec}
+\geometry{hmargin=2.5cm,vmargin=2.5cm}
+\usepackage[T1]{fontenc}
+\usepackage[]{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage{tipa}
+\newcommand{\lambdabar}{\mbox{\textipa{\textcrlambda}}}
+\usepackage[]{siunitx}
+\usepackage{textcomp}
+\usepackage{arevmath}     % For math symbols
+\usepackage{tabularx}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{caption}
+\usepackage{fncychap}
+
+\usepackage{enumitem} 
+\setlist[itemize]{noitemsep}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} %changer au jeu de caractères UTF-8
+\usepackage{array}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\frenchbsetup{StandardLists=true}
+\usepackage{shadow}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\setcounter{secnumdepth}{5}
+\newcommand{\myparagraph}[1]{\paragraph*{#1}\mbox{}\\\indent}
+\renewcommand{\baselinestretch}{1.4}
+
+\newcommand*{\imgname}[1]{% nom de la balise d image 
+	\raisebox{-.02\baselineskip}{% position de l image haut, bas plus haut plus bas .... (peut etre positif = haut ou negatif=bas )
+		\includegraphics[
+		height=5\baselineskip, %exemple  5= 500% et 0.1= 10% ça depend de ton image
+		width=5\baselineskip,
+		keepaspectratio,
+		]{#1}
+	}
+}
+
+\renewcommand{\arraystretch}{0.65}
+\usepackage[toc,page]{appendix}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[hidelinks]{hyperref}
+\addto\captionsfrench{%
+	\renewcommand\appendixname{Annexe}
+	\renewcommand\appendixpagename{Annexe}
+}
+
+
+
+\begin{document}
+
+	\input{cover}
+
+	\tableofcontents
+	\listoffigures
+	\listoftables
+	\newpage
+	\input{intro}
+
+	\chapter{Recommandation personnalisée}
+\thispagestyle{empty}
+
+\newpage
+
+
+\section{Introduction}
+
+Aujourd'hui internet est devenu omniprésent dans notre vie quotidienne, si nous avons besoin d’informations nous pensons instantanément à effectuer une recherche rapide sur le net pour qu’un grand nombre de résultats s’affiche et nous aide à effectuer notre travail, avoir des conseils et opinions d’autres personnes ou juste pour consulter les nouvelles dans le monde. Toutefois pour sélectionner et afficher un contenu censé être pertinent pour l’utilisateur est un défi en soi, il existe une multitude de ressources informationnelles et leur flot est incessant. L’une des solutions afin de pallier cette problématique consiste à utiliser un système de recommandation qui effectue un filtrage d’informations en se basant généralement sur les préférences de l’utilisateur ou d'essayer de les deviner. 
+Dans ce chapitre nous allons aborder les points suivants :
+ \begin{itemize}
+ 	\item	Les principales notions liées aux systèmes de recommandation,
+ 	\item 	Les différentes techniques de recommandations,
+ 	\item 	L’aspect sémantique dans la recommandation,
+ 	\item 	La notion de profil utilisateur dans les systèmes de recommandation,
+ 	\item 	Quelques travaux liés à la recommandation hybride,
+ 	\item 	Et nous terminerons par une conclusion.
+ \end{itemize}
+
+\section{Recommandation}
+La recommandation est l’action de signaler favorablement, conseiller ou faire valoir les mérites d’un objet ou d’une personne auprès d’une autre personne, sachant que nul ne possède la science infuse, nous essayons de nous entraider en partageant nos informations et notre expérience avec autrui et nous recommandons les choses que nous avons testés et jugés utiles aux autres en attendant qu’ils fassent de même en retour. 
+Par conséquent des liens se forgent entre nous et par la suite des communautés se forment afin d’améliorer la qualité des recommandations et la diversifier. Un des meilleurs outils pour la recommandation et le système de recommandation. 
+Nous allons définir et étudier ses aspects afin de comprendre son fonctionnement et par la suite l'implémenté et amélioré.   
+\subsection{Les systèmes de recommandations}
+Les systèmes de recommandation (SR) sont des outils dont l’objectif est de proposer des items pertinents à l’utilisateur. En d’autres termes, ils tentent de prédire pour un utilisateur l’intérêt d’un item. L’item dans ce contexte peut être un produit à acheter, un morceau de musique à écouter, un film à regarder, un livre à lire, une page web à consulter, ou bien autre chose. 
+Afin de pouvoir fournir des recommandations personnalisées, le SR doit connaître les préférences de chaque utilisateur\cite{ref1}. Les systèmes de recommandation deviennent indispensables dans de nombreux domaines. Ces domaines d’application sont différents mais partagent tous un même problème : ils offrent un choix de possibilités très important aux utilisateurs, chacun d’eux ayant par ailleurs leurs propres préférences.
+Dès lors, un moteur de recommandation qui permet de proposer à un utilisateur donné, de manière personnalisée, le sous-ensemble d’éléments qui l’intéresse, devient très utile. Il réduit de manière considérable l’effort que doit fournir l’utilisateur pour accéder à ce qui l’intéresse et participe ainsi à sa satisfaction et à sa fidélisation\cite{ref2}.
+\subsection{Le fonctionnement des systèmes de recommandation}
+L'entité à laquelle la recommandation est fournie est appelée \textit{user}, et le produit recommandé est appelé \textit{item}. Par conséquent, l'analyse des recommandations est souvent basée sur l'interaction précédente entre les users et les items\cite{ref3}.
+En général pour faire une recommandation, il est nécessaire de passer par les étapes suivantes:
+\begin{itemize}
+\item La connaissance de l’utilisateur et sa position par rapport aux autres :
+on tente dans cette étape d’acquérir les informations nécessaires pour construire les profils des utilisateurs, en exploitant les traces laissées explicitement ou implicitement. 
+Les traces explicites sont fournies volontairement par l’utilisateur lors de l’inscription ou par le remplissage d’un formulaire par exemple, et les traces implicites sont collectées en traçant les actions de l’utilisateur pendant la navigation et la recherche d’items. 
+Par la suite ces connaissances sur les utilisateurs sont représentées et stockées dans un modèle ou une matrice nommée \textit{matrice usage}, qui relie l’appréciation de l’utilisateur sur un item, cette matrice est évidemment mise à jour car la préférence d’un item peut changer.
+	
+\item Générer les listes de recommandations des items :
+après la construction des profils des utilisateurs, le SR tente de prédire les relations manquantes entre l’utilisateur et l’item afin de savoir si ce dernier va intéresser l’utilisateur et le lui recommander.
+\end{itemize}
+
+\subsection{Les caractéristiques d’un SR}
+
+Les caractéristiques que doit contenir un bon SR sont\cite{ref3} :
+\begin{itemize}
+\item Pertinence : l'objectif opérationnel le plus évident d'un système de recommandation est de recommander des éléments qui sont pertinents pour l'utilisateur. Les utilisateurs sont plus susceptibles de consommer des objets qu’ils trouvent intéressants. 
+\item Nouveauté : les systèmes de recommandation sont vraiment utiles lorsque l'élément recommandé est quelque chose que l'utilisateur n'a pas vu auparavant. Par exemple, les films populaires d'un genre préféré seraient rarement nouveaux pour l'utilisateur. La recommandation répétée d'articles populaires peut également entraîner une réduction de la diversité des ventes.
+\item Sérendipité : les éléments recommandés doivent être quelque peu inattendus, et cela doit être un peu rare et pas souvent utilisé.
+\item Augmentation de la diversité des recommandations : les systèmes de recommandation suggèrent généralement une liste des principaux items. Lorsque tous les items recommandés sont très similaires, cela augmente le risque que l’utilisateur n’apprécie aucun.
+\end{itemize}
+
+\section{Techniques de recommandation}
+Étant donné le nombre de données que le SR doit traiter afin de fournir l’information adéquate aux personnes qui le désirent, il est nécessaire de lui implémenter certaines techniques de filtrage d’information. 
+Le filtrage est souvent interprété comme l’élimination de données indésirables sur un flux entrant, plutôt que la recherche de données spécifiques sur ce flux \cite{ref4}. 
+Il existe plusieurs classifications des systèmes de recommandations (voir la figure \ref{fig:clas}). Nous avons choisi de citer et détailler trois types de filtrage selon la classification classique \cite{ref5} qui est reconnue par trois types de filtrage:
+\begin{itemize}
+	\item Filtrage cognitif : calcule la similarité entre les items pour prédire si un item sera jugé pertinent par un utilisateur sachant qu’il a déjà noté un item qui lui est similaire.
+	\item Filtrage collaboratif : basé sur les évaluations collectives des utilisateurs sur les items.
+	\item Filtrage hybride : combine deux types ou plusieurs types de filtrages.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{classification.PNG}
+	\caption{classification principale des système de recommandation de \cite{ref5}}
+	\label{fig:clas}
+\end{figure}
+
+
+\subsection{Filtrage cognitif }
+Dans les systèmes de recommandation basées sur le filtrage cognitif (appelé aussi filtrage basé sur le contenu), le terme « contenu » fait référence aux descriptions des items. 
+Les systèmes de recommandation basées sur le contenu font correspondre les utilisateurs à des items similaires à ceux déjà aimés dans le passé.
+Selon \cite{ref3}, en général les SR dépendent de deux sources de données:
+\begin{itemize}
+\item  La première source de données est une description de divers items. Un exemple d'une telle représentation pourrait être la description textuelle d'un article par le fabricant.
+\item La deuxième source de données est un profil d'utilisateur, généré à partir des \textit{feedbacks} des utilisateurs sur les divers items, qui peuvent être explicites ou implicites. 
+Les feedback explicites peuvent correspondre à des évaluations, tandis que les feedbacks implicites peuvent correspondre à des actions de l'utilisateur tel qu’achat d’article ou historique de recherche.
+\end{itemize}
+
+Après l’acquisition de ces deux sources de données, le filtrage cognitif s’effectue selon trois étapes \cite{ref3}:
+\begin{enumerate}
+	\item  Prétraitement et Extraction de caractéristique des items : les systèmes basés sur le contenu utilisent des descriptifs de type textuel pour les items il faut donc prétraiter ce texte (stemming, suppression de mots vides, extraction de phrase …) et le convertir en une représentation d'espace vectoriel basée sur des mots-clés ou modèle sémantique à base d’ontologies, qui sont une représentation structurée et facilement exploitable par le système. Il s'agit de la première étape de tout système de recommandation basé sur le contenu et elle est hautement spécifique à un domaine (par exemple : un livre a une représentation différente d’une voiture en vue des propriétés que ces 2 objets possèdent).
+	\item Apprentissage basé sur le contenu des profils d'utilisateurs : un modèle spécifique est construit pour chaque utilisateur en fonction de leurs antécédents d'achat ou d'évaluation des items, ces 2 derniers sont combinés pour réaliser un profil d'utilisateur qui établit une relation conceptuelle entre les intérêts de l'utilisateur et les attributs des items.
+	\item Filtrage et recommandation : dans cette étape, le modèle appris de l'étape précédente (profil utilisateur) et les caractéristiques des items sous forme vectoriel sont utilisés pour formuler des recommandations en calculant une certaine similarité entre les deux, cette similarité permet de définir les items qui sont susceptible d’intéressé l’utilisateur. 
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[width=\textwidth]{cognitif.png}
+	\caption{SR basé sur le contenu \cite{ref6}}
+\end{figure}
+
+
+
+ \myparagraph{Avantages et inconvénients du filtrage cognitif}
+
+\begin{itemize}
+	\item Avantages 
+	\begin{itemize}
+		\item Pas besoin d’une communauté d’utilisateurs pour pouvoir effectuer des recommandations aux utilisateurs seul leurs profils suffisent afin de proposer des articles adéquats à leurs besoins. 
+		\item Si de nouveaux items sont ajoutés dans la base de données ou s’ils ne sont pas populaires ils peuvent être recommandés 
+		\item Transparence : la méthode basée sur le contenu peut nous dire sur quoi elle se base pour suggérer des items.
+		\item Pas de démarrage à froid pour les items : contrairement au filtrage collaboratif, de nouveaux éléments peuvent être suggérés avant d'être notés par un nombre important d'utilisateurs.
+	\end{itemize}
+	\item Inconvénients
+		\begin{itemize}
+		\item Les systèmes basés sur le contenu ont tendance à rechercher des éléments similaires à ceux que l'utilisateur a vus jusqu'à présent. Ce problème est appelé sur-spécialisation. Il est toujours souhaitable d’avoir une certaine quantité de nouveauté dans les recommandations. \cite{ref3}
+		\item Même si les systèmes basés sur le contenu aident à résoudre le problème de démarrage à froid des nouveaux items, ils ne permettent pas de résoudre ce problème pour les nouveaux utilisateurs, lorsqu'il n'y a pas assez d'informations pour créer un profil solide, la recommandation ne peut pas être fournie correctement (Démarrage à froid pour les utilisateurs). \cite{ref7}
+		\item Si la description textuelle des items est insuffisante ou inexistante (cas item de type multimédia) la recommandation ne sera pas précise ou ne s’effectuera pas, ce qui peut souvent se produire .\cite{ref7}
+		\item Filtrage basé sur la similarité item profil utilisateur donc absence d’autres facteurs comme la qualité de l’item fourni par d’autre utilisateur, le public visé, etc.
+		
+	\end{itemize}
+\end{itemize}
+
+\subsection{Filtrage collaboratif}
+
+Les modèles de filtrage collaboratif utilisent la puissance collaborative des évaluations fournies par plusieurs utilisateurs pour formuler des recommandations, ce type de SR est le plus répondu car il se base sur ce que d’autres utilisateurs ont déjà évalué et apprécié, et cela fait resurgir dans les tendances des articles qui sont bien évalués par la majorité des utilisateurs.
+
+Par exemple, considérons deux utilisateurs A et B, qui ont des goûts très similaires, si les évaluations, que les deux ont spécifiées, sont très similaires, leur similarité peut être identifiée et il est très probable que les évaluations dans lesquelles l’un des deux utilisateurs a spécifié une seule valeur sont également susceptibles d'être similaires. 
+Cette similarité peut être utilisée pour déduire des évaluations non spécifiées de A et B pour des items.  
+
+Cette approche peut être appliquée à tout type de documents textuels et multimédias car contrairement au filtrage cognitif, elle ne se base pas sur le contenu des items, mais principalement sur l’exploitation des évaluations que les utilisateurs ont effectué afin de recommander ces mêmes items à d’autres utilisateurs \cite{ref8}.
+
+Il existe deux types de méthodes couramment utilisées dans le filtrage collaboratif, appelées méthodes basées sur la mémoire et méthodes basées sur un modèle \cite{ref3}, le choix de l’approche à utiliser dépendant des informations prises en compte lors du calcul de la prédiction. 
+
+Les deux méthodes partagent les points communs suivants :
+\begin{itemize}
+\item  Les deux utilisent un calcul de similarité entre les lignes et colonnes d’une matrice appelée « matrice d’usage».
+\item Les deux s’effectuent en deux étapes qui sont le calcul de similarité et la prédiction, que nous allons détailler par la suite.
+\end{itemize}
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%\setcounter{enumi}{1}
+	\item \textbf{Filtrage collaboratif basé mémoire}
+\end{enumerate}\mbox{}\indent Les méthodes basées mémoire sont également appelées algorithmes de filtrage collaboratif basés sur le voisinage. C'étaient parmi les premiers algorithmes de filtrage collaboratif, dans lesquels les évaluations des utilisateur sont prédites sur la base de leurs voisinages\cite{ref3}.
+
+Le voisinage peu être défini de deux manières :
+\begin{itemize}
+\item Filtrage collaboratif basé sur l’utilisateur : l'idée de base est de déterminer les utilisateurs qui sont similaires à l'utilisateur ciblé A (les voisins de A) en comparant les lignes de la matrice d’usage pour prédire l’évaluation que va donner A, en se basant sur le vote de ses voisins sur le même item. 
+Des fonctions de similarité sont calculées entre les lignes de la matrice d’usages pour détecter des utilisateurs similaires.	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.25\textwidth]{mat_user_user.png}
+	\caption{Matrice d’usage}
+\end{figure}
+		
+	
+
+\item Filtrage collaboratif basé sur les items : le même processus que le FC basé utilisateur est appliqué ici, sauf que dans ce cas la similarité est calculée entre les items et donc entre les colonnes de la matrice d’usage pour détecter les items similaires et les proposer aux utilisateurs qui ont déjà apprécié un item semblable.
+\begin{figure}[H]
+	\centering
+\includegraphics[width=0.25\textwidth]{mat_item_item.png}
+	\caption{Matrice d’usage}
+\end{figure}
+
+
+\end{itemize}
+
+\begin{itemize}
+	\item Le calcul de similarité:\\
+Comme vu précédemment nous avons beaucoup cité les termes « similarité » et « calcul de similarité » afin de déterminer le voisinage des utilisateurs et des items, en effet cette étape est jugés très importante dans les SR basé sur le filtrage collaboratif. Dans cette partie nous allons citer les mesures les plus utilisées dans le FC.
+
+\begin{enumerate}
+	\item Calcul similarité utilisateur :\\
+	\begin{itemize}
+	\item Corrélation de Pearson (COR):\\Pour le calcul de similarité entre deux utilisateurs u et v, la corrélation de Pearson est donnée par la formule suivante :
+
+\begin{equation}\label{key1}
+pearson(u,v)=\frac{\sum_{i \in I} (r_{u,i}-\bar{r}_{u}).(r_{v,i}-\bar{r}_{v})}{\sqrt{\sum_{i \in I} (r_{u,i}-\bar{r}_{u})^{2}.(r_{v,i}-\bar{r}_{v})^{2}}}
+\end{equation}
+
+où :
+\begin{itemize}
+	\item r $_{u,i}$ : est l'estimation de l'utilisateur u sur l’item i.
+	\item r $_{v,i}$ : est l'estimation de l'utilisateur v sur l’item i.
+	\item $\bar{r}_{u}$ : est la moyenne de toutes les notes de l'utilisateur u. 
+	\item $\bar{r}_{v}$ : est la moyenne de toutes les notes de l'utilisateur v.
+\end{itemize}
+\mbox{} 
+
+\item Cosine (COS): \\Le cosinus entre les vecteurs, est une méthode pour calculer le poids de l’utilisateur u$_{i}$  par rapport à l’utilisateur actif u$_{j}$, il est calculé comme un cosinus entre les vecteurs formés par les évaluations des utilisateurs, comme suit :
+\begin{equation}\label{key2}
+cosine(u_{i},u_{j})=\frac{\sum_{k=1}^{n} r_{u_{i,j}}.r_{u_{i,k}}}{\sqrt{\sum_{k=1}^{n} r_{u_{i,k}}^{2}.\sum_{k=1}^{n}r_{u_{j,k}}^{2}}}
+\end{equation}
+
+
+où :
+
+\begin{itemize}
+	\item r$_{u_{i,k}}$  : est l’évaluation de l’utilisateur  u$_{i}$ sur l’item i$_{k}$
+	\item r$_{u_{j,k}}$ : est l’évaluation de l’utilisateur  u$_{j}$ sur l’item i$_{k}$
+	\item 	n : est le nombre d’item dans le système.
+\end{itemize}
+\mbox{}\\
+
+\item Calcul similarité items:\\
+Le calcul de similarité entre deux items i et j : la corrélation de Pearson est donnée par la formule suivante :
+
+\begin{equation}\label{key3}
+pearson(i,j)=\frac{\sum_{u \in U} (r_{u,i}-\bar{r}_{i}).(r_{u,j}-\bar{r}_{j})}{\sqrt{\sum_{u \in U} (r_{u,i}-\bar{r}_{i})^{2}.\sum_{u \in U}(r_{u,i}-\bar{r}_{j})^{2}}}
+\end{equation}
+
+où :
+
+\begin{itemize}
+	\item r$_{u,i}$  : est l’évaluation de l’utilisateur u sur l’item i 
+	\item r$_{u,j}$ : est l’évaluation de l’utilisateur u sur l’item j
+	\item $\bar{r}_{i}$ : est la moyenne des évaluations de l’item i par les utilisateurs.
+	\item $\bar{r}_{j}$ : : est la moyenne des évaluations de l’item j par les utilisateurs.
+\end{itemize}
+\end{itemize}
+
+\item Calcul des prédictions:\\
+Le calcul de prédiction est une phase importante qui consiste à calculer des prédictions pour générer des recommandations intéressantes à un utilisateur. La plus utilisée pour le calcul de prédictions et la somme pondérée qui considère les plus proches voisins de $u_{i}$ (phase 1) ayant déjà noté l’item i$_{k}$, pour calculer la prédiction de la note de l’utilisateur u$_{i}$ sur i$_{k}$ \cite{ref9}.
+
+
+
+\begin{equation}\label{key4}
+pred(u_{i},i_{k})=\bar{r(u_{i})} + \frac{\sum_{u_{j} \in U_{i}} sim(u_{i},u_{j}).(r_{u_{j,ik}}-\bar{r(u_{j})})}{\sum_{u_{j} \in U_{i}} sim(u_{i},u_{j})}
+\end{equation}
+
+Où: 
+\begin{itemize}
+	\item sim(u$_{i}$,u$_{j}$) : est la mesure de similarité entre un utilisateur u$_{i}$ et son voisin u$_{j}$, tel que u$_{j}$ $\in$ U$_{i}$.
+
+\end{itemize}
+
+
+\end{enumerate}
+\end{itemize}
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{1}
+	\item \textbf{Filtrage collaboratif basé modèle}
+\end{enumerate}\mbox{}\indent Le filtrage collaboratif basé modèle consiste à élaborer des modèles sur lesquels la prédiction va se baser à partir d’une base de données contenant les évaluations faites par les utilisateurs sur les items et une méthode pour la construction du modèle. Il existe plusieurs méthodes pour la construction du modèle, les plus souvent utilisé dans le FC sont le clustering et les réseaux bayésien. 
+Le modèle à base de cluster repose sur le principe que certains groupes ou type d’utilisateur capturent un ensemble commun de préférences et de gouts. Étant donné un tel groupe, les préférences concernant les différents items (sous la forme d’évaluations) sont indépendantes. 
+
+Le modèle a base de réseaux bayésien associe un nœud à chaque item. Les états pour chaque nœud correspondent aux valeurs d'évaluations possible pour chaque item. On inclut également un état correspondant à l’absence d’évaluations pour les domaines où il n’y a pas d’interprétation. On peut alors appliquer un algorithme d’apprentissage de réseau bayésien sur la base d’exemple, où les évaluations manquantes sont associées à une valeur « parent » qui sont les meilleures prédictions de ses évaluations\cite{ref10}.
+
+Il existe aussi plusieurs modèle appliqué au filtrage collaboratif pour faire de la recommandation qui sont issues des domaines de recherche sur l’intelligence artificiel comme les réseau de neurone ou les processus décisionnels de Markov, cependant ces techniques font face à certaines problématique car elle sont sensible à l’arrivée de nouveaux utilisateurs ou insertion d’un nouveau item, la phrase d’apprentissage sera ainsi  ré-effectuée au fur et a mesure des mise à jour et connaissant la forte complexité de ces algorithmes elle peut s’avérer très conteuse en temps et en ressource\cite{ref35}. 
+
+\subsubsection*{Avantages et inconvénients du filtrage collaboratif \cite{ref11}:}
+\begin{itemize}
+	\item Avantages 
+	\begin{itemize}
+		\item Le filtrage collaboratif se base principalement sur les évaluations des utilisateurs et pas la thématique du contenu à recommander. Ce type de filtrage résout les problèmes liés au filtrage cognitif et donc il permet de filtrer tout type d’information (textuel, multimédia, ressources physiques, image, etc.). L’efficacité du système augmente donc en fonction du nombre d’utilisateurs.
+		\item Absence de l’effet entonnoir, car si un item est évalué, il peut alors être recommandé ce qui permet à l’utilisateur de découvrir divers domaines intéressants auxquels il n’avait pas pensé. 
+		\item Possibilité de prendre en considération d’autres facteurs et critères des items tels que la qualité de l’information, le public visé, etc. 
+	\end{itemize}
+	\item Inconvénients
+	\begin{itemize}
+		\item Démarrage à froid : toute nouvelle ressource ne peut être recommandée car elle n’a pas encore été évaluée. De même, pour un nouvel utilisateur, le système ne peut pas lui recommander une ressource car tant qu’il n’a pas effectué d’évaluations il ne pourra pas faire partie d’une communauté d’utilisateurs.
+		\item Pour former de meilleures communautés, le système exige un nombre suffisant d’évaluations en commun entre les utilisateurs pour pouvoir les rapprocher (i.e. décider s’ils appartiennent au même voisinage).		
+	\end{itemize}
+\end{itemize}
+
+\subsection{Filtrage hybride}
+Le filtrage hybride combine les deux algorithmes précédent (et/ou d'autres algorithmes), selon les méthodes suivantes:\cite{ref12}:
+\begin{itemize}
+	\item Pondérée : Les résultats pondérés de plusieurs techniques de recommandation sont combinés pour produire une nouvelle recommandation.
+	\item Permutation : Le système permute entre les différentes techniques de recommandation selon le résultat de la recommandation.
+	\item Mixte : Les recommandations de plusieurs techniques sont présentées en même temps
+	\item  Combinaison : Différentes techniques de recommandation sont combinées en un unique algorithme de recommandation
+	\item  En cascade : Un système de recommandation raffine les résultats fournis par un autre système.
+	\item Augmentation : Le résultat "output" d'une technique de recommandation est utilisé comme données en entrée "input" pour l'autre technique.
+	\item Méta-niveau : Le modèle appris par une technique de recommandation est utilisé comme données en entrée pour l'autre technique.
+\end{itemize}
+\section{Autre Système de recommandation}
+Étant donné que les filtrages présentés précédemment ne prennent pas en compte l’aspect sémantique existant dans la description des items ou dans les besoins récoltés des évaluations des utilisateurs, nous expliquons dans ce qui suit le fonctionnement du filtrage sémantique et les mesures similarité qu'il utilise.
+\subsection{Filtrage sémantique}
+Afin de surpasser les limitations du filtrage collaboratif et obtenir de meilleurs résultats, nous proposons une amélioration en combinant ce dernier avec le filtrage sémantique. La notion de sémantique qui est représentée par les ontologie va nous permettre d’établir une relation entre les utilisateurs et les items, et relier ces derniers entre eux. Ces relations permettent d'avoir un filtrage plus précis.
+
+\myparagraph{Définitions d’ontologie}	
+D’après \cite{ref13}, une ontologie est une spécification explicite d'une conceptualisation. 
+Plus concrètement, une ontologie est une description explicite des concepts et les relations entre ces derniers.Dans une ontologie, les concepts sont représentés par une classe décrite par un titre et un ensemble d'attributs. Une classe peut être une sous-classe d'une autre. L'ensemble des classes et les relations entre eux constitue une ontologie.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{ontologie_Exemple.png}
+	\caption{Une ontologie du concept animal \cite{ref29} }
+\end{figure}
+	
+	
+\myparagraph{Systèmes de recommandation avec modèles sémantiques à base d’ontologie}
+Dans le domaine du web sémantique, les recherches qui tentent d'améliorer les systèmes de recommandations ont connu une croissance, cette approche construit une hiérarchie des catégories (arborescence des concepts) dont les items sont les feuilles. Elle construit des informations sémantiques sur ces derniers et les profils des utilisateurs afin de représenter les relations entre eux, et entre les items et les utilisateurs.
+
+\myparagraph{Méthodes de mesures de similarités sémantiques}
+Il y a plusieurs méthodes du calcul de similarité sémantique,  peuvent être diviser en quatre catégories majeurs d’après \cite{ref14}:
+	\begin{enumerate}
+		\item Comptage des arcs entre deux concepts \textit{(Edge Counting}).
+		\item Approche basée sur le contenu informationnel \textit{(Information Content}).
+		\item Méthodes basées sur les fonctionnalités. (\textit{Feature-Based})
+		\item Méthodes hybrides.
+	\end{enumerate}
+Dans notre travail nous nous intéressons à la méthode de comptage d'arc, de ce fait nous allons la décrire dans ce qui suit.
+\myparagraph {Le comptage des arcs entre deux concepts}
+C’est une méthode qui utilise les ontologies sous forme d’arborescence. Elle consiste à calculer la distance entre deux concepts (le nombre des arcs qui séparent ces derniers). Ce calcul dépend très fortement de la profondeur dans laquelle se trouvent les deux concepts en question, car la similarité entre les concepts spécifiques est bien plus grande que celle des concepts généraux (plus deux concepts sémantiquement proches sont profonds dans l'arborescence plus leur similarité augmente). Il existe plusieurs techniques de comptage d'arcs, parmi ces techniques: 
+	\begin{itemize} 
+	\item Rada : Les mesures de similarité sémantique basées sur les arcs ont été introduites par \cite{ref15}. Elles ont été définies en fonction de la distance qui sépare deux concepts. La mesure est donnée par la formule suivante:
+	\begin{equation}
+	Sim_{con}= \frac{1}{1 + dist(c1, c2)}  = \frac{1}{1 + N1 + N2} 
+	\end{equation}
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\textwidth]{rada.PNG}
+		\caption{Exemple de taxonomie pour les mesures de similarité basées sur les arcs}
+		\label{fig:rada}
+	\end{figure}
+
+	\item Wu et Palmer : Soit C1 et C2 deux concepts dont nous allons calculer la similarité. Le principe de calcul de similarité est basé sur la distance (N1 et N2) séparant C1 et C2 du nœud racine et la distance (N) séparant l'ancêtre commun le plus proche (CS) de C1 et C2 du nœud R (voir figure ~\ref{fig:wupalm}). La mesure de similarité de \cite{ref37} est définie par la formule suivante:
+	\begin{equation}\label{key6}
+	Dist_{WP}= \frac{ (2*N)}{(N_{1}+N_{2}+2*N)}  
+	\end{equation}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.8\textwidth]{wupal.PNG}
+			\caption{Exemple de hiérarchie de concepts \cite{ref38}}
+			\label{fig:wupalm}
+		\end{figure}
+	
+		
+	\end{itemize}
+
+\section{Construction du profil utilisateur}
+L’utilisateur est au centre des systèmes de recommandation, il est à la fois consommateur et contributeur. Ainsi, la bonne qualité des informations sur les utilisateurs est une condition nécessaire pour l’efficacité des systèmes de recommandation. Ces informations sont stockées dans le profil utilisateur, qui se définit généralement comme une structure permettant de stocker et modéliser les préférences des utilisateurs et leurs centres d’intérêts\cite{ref20}.
+
+\subsection {Caractéristiques du profil utilisateur }
+Le profil utilisateur peut être décomposé en deux catégories \cite{ref21}:
+\begin{enumerate}
+	\item Caractéristiques explicites
+	Les caractéristiques explicites sont généralement objectives, elles se basent sur les informations fournies par l’utilisateur directement, indiquant ses centres d’intérêts, ses connaissances, ses préférences, ses objectifs, etc. Exemple: demander à un utilisateur de commenter, taguer, aimer (\textit{liker}), ajouter comme favoris des contenus qui l’intéressent. 
+	On utilise souvent une échelle d’évaluations allant d'une étoile (je n’aime pas du tout) à cinq étoiles (j’aime beaucoup), qui sont ensuite transformées en valeurs numériques afin de pouvoir être utilisées par les algorithmes de recommandation \cite{ref22}.
+	\item 	Caractéristiques implicites :
+	Les caractéristiques implicites sont généralement subjectives et difficiles à capter. Mais, contrairement aux caractéristiques explicites, elles contiennent plus d’information sur les besoins de l’utilisateur. Ces caractéristiques sont détectées à travers des comportements observables recueillis par le système lorsque l’utilisateur interagit avec son environnement \cite{ref23}.
+	\item Elles sont inférées à partir de:
+	\begin{itemize}
+		\item Activités de navigation.
+		\item Évaluations, annotations (étiquetages, tags).
+		\item Analyse du réseau social de l’utilisateur.
+		\item Liste des éléments que l’utilisateur à écoutés, regardés ou achetés en ligne.
+		\item Documents et pages web consultés et le temps passé sur chaque page, etc.
+		\item Clique de la souris sur une page (document).
+		\item Enregistrement/impression d’un document.
+		\end{itemize}
+\end{enumerate}
+L’avantage d’utiliser des techniques implicites pour la construction du profil de l’utilisateur est que ce dernier est allégé de certaines actions (définition de ses préférences, se son caractère, etc.) \cite{ref11}.
+\subsection{Modèle de représentation du profil de l’utilisateur}
+Modéliser l’utilisateur, ses centres d’intérêts, ses préférences et son besoin d’information est une tâche très importante dans les systèmes de recommandation. Pour cela, il faut tout d’abord définir la structure du profil qui nous permettra de stocker toutes les informations qui le concernent. Dans cette section, nous allons décrire les modèles les plus répandus dans la littérature pour représenter et structurer les profils des utilisateurs.
+
+\begin{enumerate}
+	\item Modèle vectoriel :\\
+	C’est le modèle basique d’espace vectoriel de \cite{ref24}. Dans cette représentation, le contenu du profil utilisateur est caractérisé par un ou plusieurs vecteurs de termes pondérés. Ces termes sont obtenus à partir de plusieurs sources d’information recueillies sur l’utilisateur.\\
+	Selon \cite{ref25} la plupart des systèmes de recommandation utilisent le modèle d’espace vectoriel (MEV), qui est une représentation spatiale des documents textuels où chaque document est caractérisé par un vecteur de poids sur des termes appartenant à l’ensemble des termes d’une collection de documents. La pondération des termes est généralement basée sur le format TF-IDF (\textit{term frequency-inverse document frequency}). Le poids associé à chaque terme représente son degré d’importance dans le profil utilisateur. 
+	
+	\begin{itemize}
+		\item 	D= (d$_{1}$, d$_{2}$, …, d$_{N}$) : collection de documents.
+		\item 	T= (t$_{1}$, t$_{2}$, …, t$_{N}$) : l’ensemble de tous les termes appartenant à la collection de document D. 
+	\end{itemize}
+	Chaque document $d_{j}$ figurant dans les préférences de l’utilisateur sera donc représenté dans son profil par un vecteur de dimension n tel que, dj= \{ w$_{1j}$, w$_{2j}$, …, w$_{nj}$ \}, ou w$_{kj}$ est le poids associé au terme t$_{k}$ dans le document.
+			
+	
+	
+ \subsubsection{ Avantages et inconvénients de ce modèle  \cite{ref27}}
+\begin{itemize}
+	\item  Avantages : Le modèle vectoriel à l’originalité d’être simple à mettre en œuvre, et la prise en compte de plusieurs centres d’intérêts de l’utilisateur en utilisant plusieurs vecteurs.  
+	\item  Inconvenients : pas d’ordonnancement entres les préférences et les centres d’intérêts des utilisateurs, et pas de considération de l’aspect sémantique (i.e. pas de liens entres les termes).
+\end{itemize}
+
+
+ \item Modèle sémantique à base d’ontologies : Les ontologies sont utilisées pour représenter les relations sémantiques entre les unités d’informations constituant le profil utilisateur. Dans ce modèle, le profil utilisateur est vu comme une hiérarchie de concepts pondérés \cite{ref26}, où chaque nœud dans la hiérarchie est un concept associé à un poids représentant l’intérêt porté par l’utilisateur sur ce concept.  Le contenu de chaque concept peut être souvent représenté par un vecteur défini dans un espace de termes pondérés. La représentation du profil utilisateur avec le modèle sémantique à base d’ontologie aide à mieux connaître les intérêts des utilisateurs par rapport au modèle vectoriel. De plus la valeur d’intérêt d’un concept peut être propagée vers les autres concepts sémantiquement liés, dans le but de trouver de nouveaux centres d’intérêts.
+
+ 
+ \begin{figure}[H]
+ 	\centering
+\includegraphics[width=\textwidth]{profile_user.PNG}
+ 	\caption{ Exemple de profil utilisateur représenté par le modèle d’ontologies avec le processus de mise à jour des poids des concepts \cite{ref28}}
+ \end{figure}
+ 
+
+\end{enumerate}
+
+\section {Travaux liés}
+Dans cette partie nous nous intéressant aux travaux existants (Sémantique, hybridation entre sémantique et collaboratif), afin de proposer par la suite une contribution et la comparé à ces travaux. Nous allons citer deux travaux liés et qui sont:
+
+\subsection{Recommandation hybride par Filtrage sémantique et FC multicritères}
+
+\begin{itemize}	
+\item Le travail présenté par Shambour et Lu \cite {ref36} propose une hybridation du filtrage sémantique avec le FC multicritères.
+
+
+\item 	Problématique :  Le Filtrage collaboratif (CF) est probablement la technique la plus populaire dans les systèmes de recommandation. Malgré son succès dans diverses applications, les techniques basées sur les FC rencontre une limitation majeure, qui est le démarrage à froid. Par conséquent les chercheurs ont proposé une approche hybride multi-critères sémantiquement renforcée du filtrage FC (MC-SeCF) afin de palier à cette problématique.\cite {ref36}. 
+
+\item 	Résultat obtenu : Les résultats expérimentaux vérifient l’efficacité de l’approche hybride pour atténuer le problème de faible densité de données et de démarrage à froid en obtenant une meilleure précision et une plus grande couverture dans les cas du démarrage à froid et l’arrivé de nouvelles données, que les algorithmes de recommandation FC basés sur les items \cite {ref36}. 
+\end{itemize}
+
+\subsection{Un système de recommandation basé sur une clustering multivues de similarité et de confiance}
+\begin{itemize}	
+\item Le travail présenté par Gu et al. \cite{ref30} propose un clustering Multivues, une vue similarité et une vue basée sur la confiance.
+
+\item 	Problématique : Bien que le clustering a démontré qu’il est efficace et évolutif pour des ensembles de données à grande échelle, les système de recommandation qui se base sur le clustering souffrent d'une précision et d'une couverture relativement faibles. Pour résoudre ces problèmes, les chercheurs ont développé une méthode de clustering multivues  par laquelle les utilisateurs sont mis dans les clusters de manière itérative à partir des deux vues de similarité et de confiance ente les utilisateurs\cite{ref30}.
+
+\item	Résultat obtenu : Les résultats expérimentaux ont été effectuer sur trois ensembles de données du monde réel, et démontrent que leurs approche peut effectivement améliorer à la fois l'exactitude et la couverture des recommandations\cite{ref30}.
+\end{itemize}
+	
+\section {Conclusion}
+Dans ce chapitre nous avons présenté la recommandation, son utilité et les notions liées à cette dernière, suivie des techniques de recommandation les plus utilisés : le filtrage cognitif, collaboratif et hybride, nous avons vu leurs fonctionnements, avantages et inconvénients. 
+La représentation des profils d’utilisateur est une étape importante dans les SR, et elle est souvent effectuée à l’aide de deux modèles:  modèle vectoriel et le modèle basé sur les ontologies.
+Les techniques de filtrage vu précédemment sont très répondu et utilisé, et peuvent t’être améliorées et optimisées en utilisant d’autres technique issue de l’intelligence artificielle comme le clustering et métaheurstique, que nous allons présenter dans le prochain chapitre. 
+
+
+\newpage
+\input{chapitre2}
+\newpage
+\input{bibio}
+\newpage
+\input{resumeng}
+\newpage
+
+
+\end{document}

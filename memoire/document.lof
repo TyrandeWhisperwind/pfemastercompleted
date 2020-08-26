@@ -1,0 +1,55 @@
+\babel@toc {french}{}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces classification principale des syst\IeC {\`e}me de recommandation de \cite {ref5}\relax }}{16}{figure.caption.6}% 
+\contentsline {figure}{\numberline {1.2}{\ignorespaces SR bas\IeC {\'e} sur le contenu \cite {ref6}\relax }}{18}{figure.caption.7}% 
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Matrice d\IeC {\textquoteright }usage\relax }}{20}{figure.caption.8}% 
+\contentsline {figure}{\numberline {1.4}{\ignorespaces Matrice d\IeC {\textquoteright }usage\relax }}{20}{figure.caption.9}% 
+\contentsline {figure}{\numberline {1.5}{\ignorespaces Une ontologie du concept animal \cite {ref29} \relax }}{25}{figure.caption.10}% 
+\contentsline {figure}{\numberline {1.6}{\ignorespaces Exemple de taxonomie pour les mesures de similarit\IeC {\'e} bas\IeC {\'e}es sur les arcs\relax }}{27}{figure.caption.11}% 
+\contentsline {figure}{\numberline {1.7}{\ignorespaces Exemple de hi\IeC {\'e}rarchie de concepts \cite {ref38}\relax }}{27}{figure.caption.12}% 
+\contentsline {figure}{\numberline {1.8}{\ignorespaces Exemple de profil utilisateur repr\IeC {\'e}sent\IeC {\'e} par le mod\IeC {\`e}le d\IeC {\textquoteright }ontologies avec le processus de mise \IeC {\`a} jour des poids des concepts \cite {ref28}\relax }}{30}{figure.caption.13}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Sch\IeC {\'e}ma expliquant le fonctionnement de BSO \cite {ref34} \relax }}{41}{figure.caption.14}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Description g\IeC {\'e}n\IeC {\'e}rale de notre syst\IeC {\`e}me de recommandation\relax }}{45}{figure.caption.15}% 
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Formule SVD\relax }}{47}{figure.caption.16}% 
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Exemple des caract\IeC {\'e}ristiques d'un user \cite {ref31}\relax }}{48}{figure.caption.17}% 
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Exemple de Singular Value decomposition \cite {ref31}\relax }}{49}{figure.caption.18}% 
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Exemple d'une ligne de la matrice \textit {item-cat\IeC {\'e}gorie}\relax }}{52}{figure.caption.19}% 
+\contentsline {figure}{\numberline {3.6}{\ignorespaces G\IeC {\'e}n\IeC {\'e}ration de la matrice de distance\textit { item-item}\relax }}{54}{figure.caption.20}% 
+\contentsline {figure}{\numberline {3.7}{\ignorespaces G\IeC {\'e}n\IeC {\'e}ration de la matrice de distance \textit {user-user}\relax }}{55}{figure.caption.21}% 
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Matrice de distance user-user\relax }}{57}{figure.caption.22}% 
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Pond\IeC {\'e}ration des matrices de distances\relax }}{58}{figure.caption.23}% 
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Diff\IeC {\'e}rence entre s\IeC {\'e}mantique standard et s\IeC {\'e}mantique bas\IeC {\'e} collaboratif\relax }}{62}{figure.caption.24}% 
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Exemple de filtrage collaboratif-s\IeC {\'e}mantique\relax }}{63}{figure.caption.25}% 
+\contentsline {figure}{\numberline {3.12}{\ignorespaces S\IeC {\'e}lection des matrices de distance \textit {user-user} pour l'application de la classification\relax }}{65}{figure.caption.26}% 
+\contentsline {figure}{\numberline {3.13}{\ignorespaces Sch\IeC {\'e}ma du filtrage multiview K-NN\relax }}{68}{figure.caption.27}% 
+\contentsline {figure}{\numberline {3.14}{\ignorespaces G\IeC {\'e}n\IeC {\'e}ration des \textit {search areas} \IeC {\`a} partir de \textit {Sref}\relax }}{76}{figure.caption.28}% 
+\contentsline {figure}{\numberline {3.15}{\ignorespaces Exemple de matrice d'usage\relax }}{78}{figure.caption.29}% 
+\contentsline {figure}{\numberline {3.16}{\ignorespaces Exemple de matrice de distance\relax }}{78}{figure.caption.30}% 
+\contentsline {figure}{\numberline {3.17}{\ignorespaces Les voisins de l'utilisateur $U_{1}$\relax }}{79}{figure.caption.31}% 
+\contentsline {figure}{\numberline {3.18}{\ignorespaces Diagramme de cas d'utilisation de notre syst\IeC {\`e}me de recommandation\relax }}{80}{figure.caption.32}% 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Exemple de structuration d'un fichier exploitable dans notre syst\IeC {\`e}me de recommandation\relax }}{85}{figure.caption.33}% 
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Capture d'\IeC {\'e}cran de l'onglet \textit {Data preprocessing}\relax }}{86}{figure.caption.34}% 
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Capture d'\IeC {\'e}cran de l'onglet \textit {Filtering data}\relax }}{87}{figure.caption.35}% 
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Capture d'\IeC {\'e}cran de l'onglet \textit {Test without classification}\relax }}{88}{figure.caption.36}% 
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Capture d'\IeC {\'e}cran de l'onglet \textit {Classification and optimisation}\relax }}{89}{figure.caption.37}% 
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Architecture de la base de donn\IeC {\'e}es RED\relax }}{92}{figure.caption.38}% 
+\contentsline {figure}{\numberline {4.7}{\ignorespaces \IeC {\'E}valuation MAE du FC standard en fonction du seuil\relax }}{94}{figure.caption.39}% 
+\contentsline {figure}{\numberline {4.8}{\ignorespaces \IeC {\'E}valuation RMSE du FC standard en fonction du seuil\relax }}{94}{figure.caption.40}% 
+\contentsline {figure}{\numberline {4.9}{\ignorespaces \IeC {\'E}valuation MAE du FC avec classification en fonction du seuil\relax }}{96}{figure.caption.41}% 
+\contentsline {figure}{\numberline {4.10}{\ignorespaces \IeC {\'E}valuation RMSE du FC avec classification en fonction du seuil\relax }}{97}{figure.caption.42}% 
+\contentsline {figure}{\numberline {4.11}{\ignorespaces \IeC {\'E}valuation MAE et RMSE du FSem en fonction du seuil de similarit\IeC {\'e}\relax }}{99}{figure.caption.44}% 
+\contentsline {figure}{\numberline {4.12}{\ignorespaces \IeC {\'E}valuation MAE avec les algorithmes de FSem bas\IeC {\'e}s classification\relax }}{100}{figure.caption.46}% 
+\contentsline {figure}{\numberline {4.13}{\ignorespaces \IeC {\'E}valuation RMSE avec les algorithmes de FSem bas\IeC {\'e}s classification\relax }}{101}{figure.caption.47}% 
+\contentsline {figure}{\numberline {4.14}{\ignorespaces \IeC {\'E}valuation MAE de l'hybridation sans classification des algorithmes FC et FSem\relax }}{103}{figure.caption.48}% 
+\contentsline {figure}{\numberline {4.15}{\ignorespaces \IeC {\'E}valuation RMSE de l'hybridation sans classification des algorithmes FC et FSem\relax }}{103}{figure.caption.49}% 
+\contentsline {figure}{\numberline {4.16}{\ignorespaces \IeC {\'E}valuation MAE des algorithmes hybrides bas\IeC {\'e}s classification\relax }}{105}{figure.caption.52}% 
+\contentsline {figure}{\numberline {4.17}{\ignorespaces \IeC {\'E}valuation RMSE des algorithmes hybrides bas\IeC {\'e}s classification\relax }}{106}{figure.caption.53}% 
+\contentsline {figure}{\numberline {4.18}{\ignorespaces \IeC {\'E}valuation MAE du FC avec classification sur RED\relax }}{111}{figure.caption.57}% 
+\contentsline {figure}{\numberline {4.19}{\ignorespaces \IeC {\'E}valuation RMSE du FC avec classification sur RED\relax }}{111}{figure.caption.58}% 
+\contentsline {figure}{\numberline {4.20}{\ignorespaces \IeC {\'E}valuation MAE du FSem avec classification sur RED\relax }}{113}{figure.caption.60}% 
+\contentsline {figure}{\numberline {4.21}{\ignorespaces \IeC {\'E}valuation RMSE du FSem avec classification sur RED\relax }}{113}{figure.caption.61}% 
+\contentsline {figure}{\numberline {4.22}{\ignorespaces \IeC {\'E}valuation MAE du filtrage hybride avec classification sur RED\relax }}{115}{figure.caption.63}% 
+\contentsline {figure}{\numberline {4.23}{\ignorespaces \IeC {\'E}valuation RMSE du filtrage hybride avec classification sur RED\relax }}{115}{figure.caption.64}% 

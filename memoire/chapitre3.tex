@@ -1,0 +1,1002 @@
+\chapter{Conception}
+\thispagestyle{empty}
+\newpage
+\section{Introduction}
+Ayant pour objectif d’augmenter les performances du filtrage collaboratif, sémantique et leurs hybridation nous proposons une approche qui utilise le clustering optimisé afin d'améliorer le partitionnement des utilisateurs (ou des items) en vue d’effectuer des recommandations plus précises. Ce chapitre sera structuré de la façon suivante:
+\begin{itemize}
+	\item Description de l'approche de recommandation par classification,
+	\item Les différents types de filtrage conçu et leurs fonctionnement,
+	\item L'aspect de classification ajoutée aux filtrages réalisés;
+	\item L'optimisation de la classification avec une métaheurstique (BSO),
+	\item Conclusion.
+\end{itemize}
+
+\section{Description de l'approche de recommandation par classification}
+Les étapes de notre approche peuvent être résumées comme suit:
+\begin{itemize}
+\item Conception du filtrage collaboratif (FC),
+\item Conception du filtrage sémantique (FSem),
+\item Réalisation de trois différentes hybridations basées sur les deux filtrage FC et FSem,
+\item Améliorer les algorithmes de filtrage conçu en leurs appliquant des techniques de classification,
+\item Réalisation d'une hybridation multiview (hybridation selon deux ou plusieurs aspects, dans notre cas l'aspect collaboratif et sémantique),
+\item  Optimisation des différents filtrage conçu avec une méta-heuristique.
+\end{itemize}
+La figure  ~\ref{fig:shema} illustre les différents algorithmes de notre approche de recommandation, par la suite nous allons présenter en détail chacun de ces algorithmes dans les sections qui suivent.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{shema.png}
+	\caption{Description générale de notre système de recommandation}
+	\label{fig:shema}
+\end{figure}
+
+\section{Filtrage sans classification}
+\subsection{Filtrage collaboratif}
+Nous avons implémenté le filtrage collaboratif user-user,item-item, et une baseline qui est SVD.
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%  \setcounter{enumi}{4}
+	\item \textbf{Filtrage collaboratif standard}
+\end{enumerate}\myparagraph{FC user-user}L'idée principale du FC user-user est d'utiliser la matrice d'usage pour déterminer les meilleurs voisins d'un utilisateur (parcours selon les lignes de la matrice), comme expliqué précédemment dans le chapitre 1. Le filtrage collaboratif passe par deux étapes, la première est le calcule de similarité et la détermination des voisins des utilisateurs, la deuxième consiste à effectuer la prédiction.
+
+L'algorithme 1 ci-dessous décrit le FC basé user-user.
+
+ \begin{algorithm}[H]
+	\caption{FC}\label{FCUSERUSER}
+	\hspace*{\algorithmicindent} \\
+	\hspace*{\algorithmicindent} \textbf{Entrée:} Matrice{\_}usage, Seuil ;\\
+	\hspace*{\algorithmicindent} \textbf{Sortie:} Ensemble de voisins de chaque utilisateur ;\\\\
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+	\begin{itemize}
+		
+		\item []\textbf{Pour} Chaque \textit{utilisateur} de \textit{Matrice{\_}usage} \textbf{faire:} 
+		   \begin{itemize}
+		   	\item [] Calculer la distance entre cet utilisateur et tout les autres utilisateurs ;
+		   	\item [] \textbf{Si:} distance  <= seuil \textbf{Alors} insérer cet utilisateur dans la table voisins du l'utilisateur en cours  \textbf{Fsi ;}
+		   \end{itemize}
+	   \item []\textbf{Fait ;} 
+	
+	\end{itemize}
+	\hspace*{\algorithmicindent}\textbf{ Fin.}
+\end{algorithm} 
+
+\begin{itemize}
+	\item \textbf{Seuil:} Nous déterminons le meilleur seuil pour le FC en évaluant les seuils générés à partir de la formule suivante:
+	\begin{equation}
+	Seuil=\frac{Min(matrice) + Max(matrice)}{10}
+	\end{equation}
+	Où Min() (respectivement Max()) est une fonction qui retourne la valeur minimum (respectivement maximum) de la matrice.
+	À l'issue de l'application de cette formule nous obtenons dix seuils à tester, et nous choisirons celui qui nous donnera les meilleures prédictions. 
+\end{itemize}
+
+\begin{itemize}
+	\item [-] \textbf{Complexité de l'algorithme}:
+	\begin{itemize}
+		\item [-] $n$: nombre d'utilisateurs.
+		\item [-] Nous effectuons $n$ itérations pour calculer les voisins de chaque utilisateur.
+	\end{itemize}
+	\item [-] Donc la complexité de FC = $O(n)$
+\end{itemize}
+
+
+\myparagraph{FC item-item}
+Comme pour le FC user-user, on détermine les voisins les plus proches des items avec la matrice d'usage mais cette fois-ci selon un parcours colonne par colonne.
+\myparagraph {SVD (Singular Value decomposition)}
+Dans le contexte des systèmes de recommandation, SVD est utilisée comme algorithme de filtrage collaboratif pour capturer la similarité entre les utilisateurs et les items en extrayant les caractéristiques cachées qu' utilisateur ou un item  possède et ainsi les faire correspondre selon leurs caractéristiques. 
+Par exemple, pour les films, l'une des caractéristiques peut  être le genre auquel le film appartient comme comédie, horreur ou les deux en même temps et pour un utilisateur s'il a un caractère sérieux ou drôle ...ect, (voir figure ~\ref{fig:exemplefeatures}). 
+Donc nous effectuons une décomposition en valeurs singulières pour extraire ces caractéristiques et avoir la meilleure décomposition de la matrice d'usage qui permet de prédire les ratings des items non encore évalués par les utilisateurs, souvent la métrique erreur racine moyenne (RMSE) est utilisée pour savoir si la décomposition et bonne ou pas(plus RMSE et bas mieux les performances et la prédiction est meilleure), on précise que nous prenons en compte que les ratings qu'on possède lors de la prédiction dans le calcul d'erreur.
+
+SVD est effectué comme indiqué dans la figure \ref{fig:svd} ci-dessous.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{svd.png}
+	\caption{Formule SVD}
+	\label{fig:svd}
+\end{figure}
+Où:
+\begin{itemize}
+	\item  X: désigne la matrice d'utilité.
+	\item  U: matrice singulière gauche, représentant la relation entre les utilisateurs et leurs caractéristiques.
+	\item  S: matrice diagonale décrivant la force de chaque caractéristique.
+	\item  V: matrice transposée singulière droite indiquant la similitude entre les items et leurs caractéristiques.
+\end{itemize}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{exemplefeatures.png}
+	\caption{Exemple des caractéristiques d'un user \cite{ref31}}
+	\label{fig:exemplefeatures}
+\end{figure}
+
+La figure \ref{fig:exemplesvd} ci-dessous montre un exemple de SVD
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{exempleofSVD.png}
+	\caption{Exemple de Singular Value decomposition \cite{ref31}}
+	\label{fig:exemplesvd}
+\end{figure}
+\myparagraph{Calcul de prédiction et distance pour le filtrage collaboratif}
+Pour chaque algorithme FC cité précédemment, nous avons utilisé la formule de Pearson afin de calculer la distance entre les utilisateurs et les items, comme suit: 
+\begin{itemize}
+\item Calcul distance entre utilisateur:\\
+Pour le calcul de distance entre deux utilisateurs u et v, la corrélation de Pearson est donnée par la formule suivante :
+\begin{equation}\label{key21}
+pearson(u,v)= 1 - \frac{\sum_{i \in I} (r_{u,i}-\bar{r}_{u}).(r_{v,i}-\bar{r}_{v})}{\sqrt{\sum_{i \in I} (r_{u,i}-\bar{r}_{u})^{2}.(r_{v,i}-\bar{r}_{v})^{2}}}
+\end{equation}
+
+où :
+\begin{itemize}
+	\item r $_{u,i}$ : est l'estimation de l'utilisateur u sur l’item i.
+	\item r $_{v,i}$ : est l'estimation de l'utilisateur v sur l’item i.
+	\item $\bar{r}_{u}$ : est la moyenne de toutes les notes de l'utilisateur u. 
+	\item $\bar{r}_{v}$ : est la moyenne de toutes les notes de l'utilisateur v.
+\end{itemize}
+
+La distance est interprétée comme suit:
+
+\begin{itemize}
+	\item Si Pearson(u,v) = 0 alors les utilisateurs u et v sont parfaitement identiques.
+	\item Si Pearson(u,v) = 1 alors les utilisateurs u et v ne sont pas corrélés. 
+	\item Si 0 < Pearson(u,v) < 1  alors les utilisateurs u et v sont corrélés positivement (proches) et la distance représente le degrés de corrélation. 
+	\item Si 1 < Pearson(u,v) < 2  alors les utilisateurs u et v sont corrélés négativement (loin) et la distance représente le degrés de corrélation. 
+	\item Si Pearson(u,v) = 2 alors les utilisateurs u et v sont parfaitement opposés.
+\end{itemize}
+
+\item Calcul distance entre items:\\
+Le calcul de distance entre deux items i et j : la corrélation de Pearson est donnée par la formule suivante :
+
+\begin{equation}
+pearson(i,j)= 1 - \frac{\sum_{u \in U} (r_{u,i}-\bar{r}_{i}).(r_{u,j}-\bar{r}_{j})}{\sqrt{\sum_{u \in U} (r_{u,i}-\bar{r}_{i})^{2}.\sum_{u \in U}(r_{u,i}-\bar{r}_{j})^{2}}}
+\end{equation}
+
+où :
+
+\begin{itemize}
+	\item r$_{u,i}$  : est l’évaluation de l’utilisateur u sur l’item i 
+	\item r$_{u,j}$ : est l’évaluation de l’utilisateur u sur l’item j
+	\item $\bar{r}_{i}$ : est la moyenne des évaluations de l’item i par les utilisateurs.
+	\item $\bar{r}_{j}$ : : est la moyenne des évaluations de l’item j par les utilisateurs.
+\end{itemize}
+ 
+ 
+La distance est interprétée comme suit:
+ 
+ \begin{itemize}
+ 	\item Si Pearson(i,j) = 0 alors les item i et j sont parfaitement identiques.
+ 	\item Si Pearson(i,j) = 1 alors les item i et j ne sont pas corrélés. 
+ 	\item Si 0 < Pearson(i,j) < 1  alors les item i et j  sont corrélés positivement (proches) et la distance représente le degrés de corrélation. 
+ 	\item Si 1 < Pearson(i,j) < 2  alors les item i et j sont corrélés négativement (loin) et la distance représente le degrés de corrélation. 
+ 	\item Si Pearson(i,j) = 2 alors les item i et j  sont parfaitement opposés.
+ \end{itemize}
+
+
+Pour la prédiction des valeurs des évaluations (ratings) des items non encore évalués, nous avons utilisé la formule de la somme pondérée:
+
+
+\begin{equation}
+pred(u_{i},i_{k})=\bar{r(u_{i})} + \frac{\sum_{u_{j} \in U_{i}} sim(u_{i},u_{j}).(r_{u_{j,ik}}-\bar{r(u_{j})})}{\sum_{u_{j} \in U_{i}} sim(u_{i},u_{j})}
+\end{equation}
+
+Où: 
+\begin{itemize}
+	\item sim(u$_{i}$,u$_{j}$) : est la mesure de similarité entre un utilisateur u$_{i}$ et son voisin u$_{j}$, tel que u$_{j}$ $\in$ U$_{i}$.
+	\item $\bar{r}_{i}$ : est la moyenne des évaluations de l’item i par les utilisateurs.
+	\item $\bar{r}_{j}$ : est la moyenne des évaluations de l’item j par les utilisateurs.
+	
+\end{itemize}
+\end{itemize}
+\subsection{Filtrage sémantique standard}
+Ce type de filtrage utilise la notion sémantique pour déterminer les profils des utilisateurs qui sont similaires. Comme pour le filtrage collaboratif, le filtrage sémantique passe par deux étapes le calcule de similarité entre utilisateurs ensuite la prédication des ratings sur les items non évalués.
+
+Pour déterminer si deux profils d'utilisateurs sont similaires du point de vue sémantique, nous nous intéressons aux items que les deux utilisateurs ont bien notés afin d'identifier les catégories qui sont susceptibles de les intéresser et donc par la suite leur recommander des items de catégories identiques ou similaires. 
+
+C'est à partir de la catégorie d'un item que nous allons extraire l'information sémantique, pour cela nous disposons d'une matrice \textit{item-catégorie} qui contient pour chaque item donné la catégorie à laquelle il appartient.
+Un item peut appartenir à plusieurs catégories en même temps, comme le montre la figure \ref{fig:cat} ci-dessous:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.60\textwidth]{movie-genre.PNG}
+	\caption{Exemple d'une ligne de la matrice \textit{item-catégorie}}
+	\label{fig:cat}
+\end{figure}
+
+Pour déterminer la similarité sémantique entres les items, nous devons calculer la distance entre ces derniers en se basant sur leurs représentation. Deux cas de figures se présentent à nous:
+\begin{itemize}
+	\item Les items ne sont pas représentés avec des ontologies: Pour chaque item de la matrice \textit{item-catégorie}, nous appliquons la distance de Jaccard  afin de déterminer les degrés de similarité entre les items et ainsi obtenir une matrice de distance \textit{item-item}. La distance de Jaccard est comprise entre $[0;1]$ et a la propriété d'être égale à 0 quand les items sont différents et 1 quand ils sont identiques et est calculée comme suit:
+	
+	\begin{equation}
+	\displaystyle\text{J}(A,B) = 1 - \frac{|A\cap B|}{|A| + |B| -|A \cup B|} = 1 - \frac{\sum a_{i} * b_{i}}{\sum a_{i}^{2} + \sum b_{i}^{2} - \sum a_{i} * b_{i}}
+	\end{equation}
+	
+	Où:
+	\begin{itemize}
+		\item $A$ et $B$: sont deux items,
+		\item $a_{i}$, $b_{i}$: peuvent être soit 0 ou 1, ils indiquent l'appartenance ou non de l'item $A$ (respectivement $B$) à un une catégorie ${i}$ .
+	\end{itemize}
+
+\item Les items sont représentés avec des ontologies: Pour chaque item de la matrice \textit{item-catégorie}, nous appliquons la distance de Wu et Palmer  afin de déterminer les degrés de similarité entre les items et ainsi obtenir une matrice de distance \textit{item-item}. La distance de Wu et Palmer est comprise entre $[0;1]$. Si deux concepts sont identique la distance est égale à zéro et s'ils sont opposés elle est égale à un, et est calculée comme suit:
+
+\begin{equation}
+Dist_{WP}= 1 - \frac{ (2*N)}{(N_{1}+N_{2}+2*N)}
+\end{equation}
+Où:
+\begin{itemize}
+	\item $C1$ et $C2$: sont deux concepts.
+	\item $N1$ et $N2$: la distance  séparant C1 et C2 du nœud racine.
+	\item $N$: distance séparant l'ancêtre commun le plus proche de C1 et C2 du nœud racine.
+\end{itemize}
+\end{itemize}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{movie-movie-distance.PNG}
+	\caption{Génération de la matrice de distance\textit{ item-item}}
+\end{figure}
+
+Après avoir obtenu la matrice distance\textit{ item-item} nous appliquons la formule de distance d'intérêt pour calculer la distance entre les utilisateurs de la matrice d'usage et ainsi obtenir la matrice de distance \textit{user-user} comme suit: 
+
+
+
+\begin{equation}
+d_{interest}(u,v) = \frac{\sum _{x \in X}n_{x} min_{y \in Y} d_{x,p} (x,y) + \sum_{y \in Y} n_{y} min_{x \in X} d_{w,p} (x,y)} {\sum _{x \in X} n_{x} + \sum _{y \in Y} n_{y}}
+\end{equation}
+
+Où: X (respectivement Y) sont les deux catégorie que u (respectivement v) a revu.
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{user-user-interet.PNG}
+	\caption{Génération de la matrice de distance \textit{user-user}}
+\end{figure}
+
+À partir de la matrice distancée \textit{user-user} nous pouvons déterminer à présent les voisins d'un utilisateur donné en appliquant l'algorithme suivant:
+
+ \begin{algorithm}[H]
+	\caption{Filtrage sémantique}
+	\hspace*{\algorithmicindent} \\
+	\hspace*{\algorithmicindent} \textbf{Entrée:} Matrice de distance user-user, Seuil;\\
+	\hspace*{\algorithmicindent} \textbf{Sortie:} Ensemble de voisins de chaque utilisateur \\\\
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+	\begin{itemize}
+		
+		\item []\textbf{Pour} Chaque \textit{utilisateur{\_}i} de \textit{matrice{\_}distance} \textbf{faire:} 
+		\begin{itemize}
+		\item []\textbf{Pour} Chaque \textit{distance{\_}j} de \textit{utilisateur{\_}i} \textbf{faire:} 
+		\begin{itemize}
+				\item [] /*récupérer l'indice de la colonne, qui représente l'indice du voisin en cours de traitement*/
+			\item [] utilisateur{\_}j  $\leftarrow$ indice(distance{\_}j) 
+			
+			\item [] \textbf{Si:} \textit{distance{\_}j}  <= Seuil \textbf{Alors} insérer \textit{utilisateur{\_}j}  dans la table voisins du l'\textit{utilisateur{\_}i }\textbf{Fsi;}
+		\end{itemize}
+	
+\item []  \textbf{Fait;}
+\end{itemize}
+\item []  \textbf{Fait;}
+	\end{itemize}
+	\hspace*{\algorithmicindent}\textbf{ Fin.}
+\end{algorithm} 
+
+\begin{itemize}
+	\item \textbf{Seuil:} Le seuil est calculé de la même façon que pour le FC (voir seuil dans la partie FC).
+\end{itemize}
+
+\begin{itemize}
+	\item [-] \textbf{Complexité de l'algorithme}:
+	\begin{itemize}
+		\item [-] $n$: nombre d'utilisateurs.
+		\item [-] $n^2$: taille de la matrice de distance carré.
+		\item [-] À chaque itération on fait un parcours de $n^2$ (taille de la matrice de distance).
+	\end{itemize}
+\item [-]  Donc la complexité du filtrage sémantique = $O(n^2)$
+\end{itemize}
+
+\myparagraph{Calcul de prédiction pour le filtrage sémantique}
+Pour la prédiction des valeurs des ratings sur les items non encore évalués, nous avons utilisé la formule de la somme pondérée citée précédemment.
+
+\subsection{Filtrage hybride}
+Dans cette partie, nous allons détailler trois méthodes d'hybridation que nous avons implémentées entre les 2 types de filtrage déjà réalisés précédemment (sémantique, collaboratif), et qui sont:
+
+\begin{itemize}
+	\item Filtrage collaboratif hybride pondéré.
+	\item Filtrage collaboratif basé sémantique.
+	\item Filtrage sémantique basé collaboratif.
+	
+\end{itemize}
+
+Pour chaque type d'hybridation conçu, les deux matrices de distance collaboratif (user-user, item-item) et sémantique jouent un rôle très important et sont calculées de la sorte:
+
+\begin{itemize}
+\item Matrice distance du filtrage collaboratif: 
+
+Nous appliquons la formule Pearson pour calculer la distance d'un utilisateur avec le reste des utilisateurs de la  matrice d'usage et nous stockons les valeurs des distances dans une matrice comme le montre la figure \ref{fig:distuser} suivante: 
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.80\textwidth]{matUserUSer.PNG}
+		\caption{Matrice de distance user-user}
+		\label{fig:distuser}
+	\end{figure}
+
+	\item  Matrice distance du filtrage sémantique: (voir explication dans la partie filtrage sémantique standard.)
+\end{itemize}
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%  \setcounter{enumi}{4}
+	\item \textbf{Filtrage hybride pondéré}
+\end{enumerate}\mbox{}\indent 
+L'algorithme de filtrage hybride pondéré associe à chaque matrice de distance collaborative et sémantique respectivement un poids $\alpha$ et $\beta$ qui représentent les degrés d'importance de chaque type de recommandation (voir figure \ref{fig:alpha}) avec:
+\begin{itemize}
+	\item  $0.1 =< \alpha =< 0.9$
+	\item  $\beta = 1 - Alpha$ 
+	\item 	$\alpha + \beta = 1$
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{hybpondere.PNG}
+	\caption{Pondération des matrices de distances}
+	\label{fig:alpha}
+	
+\end{figure}
+
+Nous utilisons une boucle, dans laquelle nous augmentons la valeur de $\alpha$ de 0.1, et nous affectons à $\beta$ la valeur $1 - \alpha$, puis nous multiplions la matrice de distance du filtrage collaboratif par $\alpha$ et la matrice de distance du filtrage sémantique par $\beta$, nous évaluons par la suite les prédictions générées à partir de ces deux matrices, nous répétons ce processus jusqu'à ce que nous obtenons les meilleures valeurs possibles pour $\alpha$ et $\beta$ qui permettes d'accorder l'importance adéquate aux filtrages collaboratif et sémantique.
+
+ \begin{algorithm}[H]
+	\caption{Filtrage hybride pondéré}\label{HP}
+	\hspace*{\algorithmicindent} \textbf{Entrée:}
+	 \begin{itemize}
+	\item [] Matrice{\_}distance{\_}FC: Matrice de distance du FC user-user , 
+	\item [] Matrice{\_}distance{\_}SEM: Matrice de distance du filtrage sémantique user-user,
+	\item [] Seuil{\_}Voisin: le seuil d'acceptation d'un voisin ;
+	\end{itemize}
+	\hspace*{\algorithmicindent} \textbf{Sortie:} 
+	\begin{itemize}
+	\item [] Ensemble de voisins pour chaque utilisateur selon meilleur poids Alpha ; 
+	
+	
+	\end{itemize}
+	
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+	\begin{itemize}
+		
+		\item [] Alpha $\leftarrow$ 0.1 ;
+		\item [] Beta $\leftarrow$ 1 - Alpha ;
+		\item [] Best{\_}evaluation $\leftarrow$ Float(Inf) ;
+		\item [] BestAlhpa $\leftarrow$ Float(Inf) ;
+		\item []\textbf{Tant que } \textit{Beta >= 0.1}  \textbf{faire :} 
+		\begin{itemize}
+			
+			\item [] AlphaMatrice $\leftarrow$  matrice{\_}distance{\_}FC * Alpha ;
+			\item []Beta $\leftarrow$ 1 - Alpha ;
+			\item [] BetaMatrice $\leftarrow$  matrice{\_}distance{\_}SEM * Beta ;
+			\item  [] SommeMatrices $\leftarrow$  AphaMatrice +  BetaMatrice ;
+			\item  [] Voisins{\_}users  $\leftarrow$ Voisin (SommeMatrices , Seuil{\_}Voisin) ;
+			\item [] tableau{\_}prediciton $\leftarrow$  Prediction (usage{\_}matrice , Voisins{\_}users ) ;
+			\item [] evaluation $\leftarrow$ Evaluation (tableau{\_}prediciton , reelles{\_}valeurs) ;
+			\item [] \textbf{Si:} Best{\_}evaluation  >=  evaluation \textbf{Alors} 
+			\begin{itemize}
+				\item [] 	Swap (Best{\_}evaluation, evaluation) ;
+				\item [] 	BestAlpha $\leftarrow$ valeurAlpha ;
+			\end{itemize}	
+				\item [] \textbf{Fsi ;}
+				\item [] Alpha $\leftarrow$ Alpha - 0.1 ;
+					
+		\item [] \textbf{Fait ;} 
+		\end{itemize}
+		\item [] \textbf{Fait ;} 
+	\end{itemize}
+	\hspace*{\algorithmicindent}\textbf{ Fin.}
+\end{algorithm} 
+
+Où:
+\begin{itemize}
+	\item Voisins: Fonction qui calcule les voisins pour chaque utilisateur à partir d'un seuil et de la matrice de distance entre utilisateurs.
+	\item Prediction: Fonction qui effectue les prédictions des items non évalués pour chaque utilisateur.
+	\item Evaluation: Fonction qui calcule la qualité d'une prédiction effectuée. 
+\end{itemize}
+
+\begin{itemize}
+	\item [-] \textbf{Complexité de l'algorithme}:
+	\begin{itemize}
+		\item [-] $n$: nombre d'utilisateurs.
+		\item [-] $n^2$: taille de la matrice de distance carré.
+		\item [-] Nous avons neuf itérations (de 0.1 jusqu'à 0.9).
+		\item [-] À chaque itération on fait un parcours de $n^2$ (taille de la matrice de distance).
+	\end{itemize}
+	\item [-]  Donc la complexité du filtrage hybride pondéré = $O(9*n^2)$
+\end{itemize}
+
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	 \setcounter{enumi}{1}
+	\item \textbf{Filtrage hybride sémantique basé collaboratif}
+\end{enumerate}\mbox{}\indent Le filtrage sémantique standard décrit précédemment, utilise une matrice de distance entre les items qui est calculée avec la formule Jaccard, ici nous allons la remplacer avec la matrice de distance items issue du filtrage collaboratif (voir figure \ref{fig:semfc}) en utilisant la formule Pearson comme suit:
+\begin{itemize}
+	\item [-]Soit deux items i et j : la corrélation de Pearson est donnée par la formule suivante :
+\end{itemize}
+\begin{equation}
+pearson(i,j)=\frac{\sum_{u \in U} (r_{u,i}-\bar{r}_{i}).(r_{u,j}-\bar{r}_{j})}{\sqrt{\sum_{u \in U} (r_{u,i}-\bar{r}_{i})^{2}.\sum_{u \in U}(r_{u,i}-\bar{r}_{j})^{2}}}
+\end{equation}
+
+Où:
+
+\begin{itemize}
+	\item r$_{u,i}$  : est l’évaluation de l’utilisateur u sur l’item i 
+	\item r$_{u,j}$ : est l’évaluation de l’utilisateur u sur l’item j
+	\item $\bar{r}_{i}$ : est la moyenne des évaluations de l’item i par les utilisateurs.
+	\item $\bar{r}_{j}$ : est la moyenne des évaluations de l’item j par les utilisateurs.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{differance-entre-stand-sembasefc.PNG}
+	\caption{Différence entre sémantique standard et sémantique basé collaboratif}
+	\label{fig:semfc}
+\end{figure}
+\textbf{Remarque:} Après avoir passer en entrée la matrice de distance entre les items issue du FC, le même algorithme du filtrage sémantique est utilisé pour effectuer le filtrage sémantique basé collaboratif.
+\myparagraph{Calcul de prédiction et distance pour le filtrage hybride sémantique basé collaboratif }
+Pour la prédiction des valeurs des ratings sur les items non encore évalués, nous avons utilisé la formule de la somme pondérée citée précédemment.
+Quant au calcule de distance entre utilisateurs elle s'effectue comme montré dans le filtrage sémantique en utilisant la même formule de calcul de distance d'intérêt (Formule 3.5). \\
+
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{2}
+	\item \textbf{Filtrage hybride collaboratif basé sémantique}
+\end{enumerate}\mbox{}\indent \iffalse  Dans le filtrage collaboratif, la matrice de distance est calculée avec la formule Pearson, qui donne une distance comprise entre [-1,1], si la distance est égale à 0 cela signifie qu'on ne sait pas si les deux utilisateurs sont corrélés ou pas et ça nous mène à un cas d'indétermination, donc pour y remédier on utilise la matrice de distance du filtrage sémantique dans le cas ou on trouve dans la matrice de distance du filtrage collaboratif \textit{user-user} des distances égalent à 0.
+\fi Dans ce filtrage nous effectuons une séléction des voisins d'un utilisateur en utilisant les deux matrices de distance du FC et du filtrage sémantique.
+Pour deux utilisateur A et B, B est considéré comme voisin de A ssi :\\
+$\min( DFC(A,B) , DFSEM(A,B) ) <= seuil$
+\\
+Où:
+\begin{itemize}
+	\item DFC: distance ente utilisateur A et B selon le filtrage collaboratif.
+	\item DFSEM: distance ente utilisateur A et B selon le filtrage sémantique.
+	\item seuil: seuil d'acceptation d'un voisin pour un utilisateur donnée.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{fcbasesem.PNG}
+	\caption{Exemple de filtrage collaboratif-sémantique}
+\end{figure}
+\iffalse 
+ \begin{algorithm}[H]
+	\caption{Filtrage sémantique basé collaboratif}\label{sembasécol}
+	\hspace*{\algorithmicindent} \\
+	\hspace*{\algorithmicindent} \textbf{Entrée:} \begin{itemize}
+		\item [] Matrice{\_}distance{\_}FC: Matrice de distance du FC user-user , 
+		\item [] Matrice{\_}distance{\_}SEM: Matrice de distance du filtrage sémantique user-user;
+		\item []  Seuil{\_}Voisin: le seuil d'acceptation d'un voisin ;
+	\end{itemize}
+	\hspace*{\algorithmicindent} \textbf{Sortie:} 
+	\begin{itemize}
+		\item [] Ensemble de voisins de chaque utilisateur
+	\end{itemize}
+
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+	
+	\begin{itemize}
+		\item [] \textbf{Pour} Chaque \textit{utilisateur{\_}i} de \textit{ Matrice{\_}distance{\_}FC} \textbf{faire:} 
+	
+		\begin{itemize}
+		\item [] \textbf{Pour} Chaque \textit{distance{\_}j} de \textit{utilisateur{\_}i} \textbf{faire:} 
+		\begin{itemize}
+		\item [] /*récupérer l'indice de la colonne, qui représente l'indice du voisin en cours de traitement*/
+		\item [] utilisateur{\_}j  $\leftarrow$ indice(distance{\_}j) 
+		\item [] \textbf{Si:} distance{\_}j ==  0 \textbf{Alors} 
+		\begin{itemize}
+		\item [] distance{\_}j $\leftarrow$ Matrice{\_}distance{\_}SEM [ \textit{utilisateur{\_}i,utilisateur{\_}j }] \textbf{Fsi;}
+		
+		\end{itemize}
+		\item [] \textbf{Si:} distance  <= Seuil \textbf{Alors} insérer utilisateur{\_}j  dans la table voisins du l'utilisateur{\_}i \textbf{Fsi;}
+		\end{itemize}
+	
+
+		\end{itemize}
+	\end{itemize}
+		
+	\hspace*{\algorithmicindent}\textbf{ Fin.}
+\end{algorithm} 
+\fi
+
+
+\begin{algorithm}[H]
+	\caption{Filtrage hybride collaboratif basé sémantique}
+	\hspace*{\algorithmicindent} \\
+	\hspace*{\algorithmicindent} \textbf{Entrée:} \begin{itemize}
+		\item [] Matrice{\_}distance{\_}FC: Matrice de distance du FC user-user , 
+		\item [] Matrice{\_}distance{\_}SEM: Matrice de distance du filtrage sémantique user-user;
+		\item []  Seuil{\_}Voisin: le seuil d'acceptation d'un voisin ;
+	\end{itemize}
+	\hspace*{\algorithmicindent} \textbf{Sortie:} 
+	\begin{itemize}
+		\item [] Ensemble de voisins de chaque utilisateur ;
+	\end{itemize}
+	
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+
+
+	
+	\begin{itemize}
+	\item []	Matrice{\_}distance $\leftarrow$ Min ( Matrice{\_}distance{\_}FC , Matrice{\_}distance{\_}SEM ) ;
+		
+		\item [] \textbf{Pour} Chaque \textit{utilisateur{\_}i} de \textit{ Matrice{\_}distance} \textbf{faire:}
+				
+		\begin{itemize}
+			\item [] \textbf{Pour} Chaque \textit{distance{\_}j} de \textit{utilisateur{\_}i} \textbf{faire:} 
+			\begin{itemize}
+				\item [] /*récupérer l'indice de la colonne, qui représente l'indice du voisin en cours de traitement*/
+				\item [] utilisateur{\_}j  $\leftarrow$ indice(distance{\_}j) 
+
+				\item [] \textbf{Si:} distance{\_}j  <= Seuil \textbf{Alors} insérer utilisateur{\_}j  dans la table voisins du l'utilisateur{\_}i \textbf{Fsi;}
+			\end{itemize}
+			
+			\item []  \textbf{Fait;}
+		\end{itemize}
+	\item []  \textbf{Fait;}
+	\item [] \textbf{ Fin.}
+	\end{itemize}
+	
+
+\end{algorithm} 
+
+Où:
+\begin{itemize}
+	\item Min(): Fonction qui prend minimum des distances entre deux matrices et les stocke dans une nouvelle matrice.
+\end{itemize}
+
+\begin{itemize}
+	\item [-] \textbf{Complexité de l'algorithme}:
+	\begin{itemize}
+		\item [-] $n$: nombre d'utilisateurs.
+		\item [-] $n^2$: taille de la matrice de distance carré.
+		\item [-] À chaque itération on fait un parcours de $n^2$ (taille de la matrice de distance).
+	\end{itemize}
+	\item [-]  Donc la complexité du filtrage collaboratif basé sémantique = $O(n^2)$
+\end{itemize}
+
+
+\section{Filtrage avec classification}
+Dans cette partie, nous allons expliquer l'amélioration apportée aux différents filtrages conçus jusqu'à présent en leurs ajoutant une technique de classification, on précise que la matrice de distance que nous allons utiliser pour classifier les utilisateurs est le résultat d'une des variantes du FC, notre choix sera basé sur les tests effectués afin de prendre la meilleure variante, donc nous aurons à choisir entre FC item-item, FC user-user ou SVD. Concernant le FSem nous avons conçu une seule variante par conséquent il n'y aura pas de choix à faire. Enfin, pour le filtrage hybride nous incorporons la classification dans les trois méthodes réalisées (filtrage hybride pondéré, collaboratif basé sémantique et sémantique basé collaboratif.(voir figure \ref{fig:selec})
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.1\textwidth]{selectionbestmat.PNG}
+	\caption{Sélection des matrices de distance \textit{user-user} pour l'application de la classification}
+	\label{fig:selec}
+\end{figure}
+
+\subsection{Filtrage avec classification supervisée}
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%  \setcounter{enumi}{4}
+	\item \textbf{K-NN}
+\end{enumerate}\mbox{}\indent Comme motionné dans le chapitre 2, K-NN est un algorithme d'apprentissage automatique. Dans notre cas nous l'avons utilisé pour effectuer les prédictions d'un utilisateur donné, en se basant sur ses voisins les plus proches. Nous avons besoin donc des distances entre utilisateurs sous forme de matrice de distance \textit{user-user} issue d'un des type de filtrage et \textit{K} qui est le nombre de voisins à considérer.
+
+Par exemple pour effectuer un filtrage sémantique basé K-NN, il suffit d'envoyer à l'algorithme ci-dessous la matrice de distance \textit{user-user} issue du filtrage sémantique.
+Il en est de même pour effectuer:
+\begin{itemize}
+	\item Filtrage collaboratif basé K-NN.
+	\item Filtrage hybride pondéré basé K-NN.
+	\item Filtrage collaboratif basé sémantique avec classification K-NN.
+	\item Filtrage sémantique basé collaboratif avec  classification K-NN.
+\end{itemize}
+
+\begin{algorithm}[H]
+	\caption{Filtrage avec classification supervisée (K-NN)}
+	\hspace*{\algorithmicindent} \\
+	\hspace*{\algorithmicindent} \textbf{Entrée:} \begin{itemize}
+		\item [] Matrice{\_}distance{\_}user-user: Matrice de distance issue d'un des types de filtrage , 
+		\item []  K: le nombre de voisins à considérer dans les prédictions;
+	\end{itemize}
+	\hspace*{\algorithmicindent} \textbf{Sortie:} 
+	\begin{itemize}
+		\item [] Ensemble de K voisins de chaque utilisateur ;
+	\end{itemize}
+	
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+	
+	\begin{itemize}
+		\item [] Voisins[ ] ;/*Liste de listes qui contient les voisins des utilisateurs*/
+		\item [] \textbf{Pour} Chaque \textit{utilisateur{\_}i} de \textit{ Matrice{\_}distance{\_}user-user} \textbf{faire:} 
+			
+			\begin{itemize}
+				\item [] /*trier selon l'ordre croissant les distances entre l'utilisateur i et le reste des utilisateur du dataset contenu dans la ligne utilisateur{\_}i */
+				\item []	sortedListe $\leftarrow$ Sort(utilisateur{\_}i) ;
+			\item []	/*Récupérer les indices des K plus proches voisins de l'utilisateur{\_}i/
+				\item [] Voisins[utilisateur{\_}i] $\leftarrow$ Min{\_}K{\_}distance(K,indice(soretedListe)) ;
+				
+			\end{itemize}
+		\end{itemize}
+		
+		\hspace*{\algorithmicindent}\textbf{ Fin.}
+	\end{algorithm} 
+
+\begin{itemize}
+	\item [-] \textbf{Complexité de l'algorithme}:
+	\begin{itemize}
+		\item [-] $n$: nombre d'utilisateurs.
+		\item [-] CAAT: complexité approximative de l'algorithme de trie.
+		\item [-] À chaque itération on fait un parcours de $n$ (taille de la matrice de distance).
+	\end{itemize}
+	\item [-]  Donc la complexité du filtrage avec classification supervisée = $O(n*CAAT)$
+\end{itemize}
+	
+\mbox{}
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	  \setcounter{enumi}{1}
+	\item \textbf{Hybridation mutivues, collaborative et sémantique, basé sur K-NN}
+\end{enumerate}\mbox{}\indent Cette approche est inspirée du travail des chercheurs Guibing Guo et al. \cite{ref30}, dans lequel ils effectuent un clustering des utilisateurs en appliquant deux fois consécutives k-medoids (une fois selon la vue similarité et la deuxième fois selon la vue de confiance entre utilisateurs) et par la suite combiner le résultat des deux vues.
+Nous avons étudié leur travail et put aboutir à l'idée d'utiliser l'algorithme K-NN selon nos deux vues sémantique et collaboratif.
+Le choix de l'algorithme K-NN semble adéquat aux données et informations dont on dispose, de plus c'est un algorithme simple et très utilisé dans la recommandation.
+
+L'idée générale de notre approche est d'effectuer une classification K-NN sur la matrice de distance \textit{user-user} du FC et de prendre K utilisateurs ce qui nous donne une classification selon une première vue, par la suite refaire la même chose sur la matrice de distance \textit{user-user} du filtrage sémantique  pour avoir la deuxième vue, enfin combiner les deux classifications en exécutant K-NN une autre fois sur les K utilisateurs issues de la première classification et de la deuxième (voir figure \ref{fig:knn}).
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{multiviewknn.PNG}
+	\caption{Schéma du filtrage multiview K-NN}
+	\label{fig:knn}
+\end{figure} 
+
+\begin{algorithm}[H]
+	\caption{Filtrage avec multiview (K-NN) Partie 1}
+	\hspace*{\algorithmicindent} \\
+	\hspace*{\algorithmicindent} \textbf{Entrée:} \begin{itemize}
+		\item [] Matrice{\_}distance{\_}user-user{\_}FC: Matrice de distance issue d'un du filtrage collaboratif,
+		\item [] Matrice{\_}distance{\_}user-user{\_}SEM: Matrice de distance issue d'un du filtrage sémantique,
+		\item []  K: le nombre de voisins à considérer dans les prédictions;
+	\end{itemize}
+	\hspace*{\algorithmicindent} \textbf{Sortie:} 
+	\begin{itemize}
+		\item [] Ensemble de K voisins de chaque utilisateur selon les deux vues ;
+	\end{itemize}
+	
+	\hspace*{\algorithmicindent}\textbf{ Début:}
+	\hspace*{\algorithmicindent}\\Voisins[ ]{\_}CF ;/*Liste de listes qui contient les voisins des utilisateurs selon filtrage collaboratif*/
+	\hspace*{\algorithmicindent}\\ Voisins[ ]{\_}SEM ;/*Liste de listes qui contient les voisins des utilisateurs selon filtrage sémantique*/
+\hspace*{\algorithmicindent}\\\textbf{Pour} Chaque \textit{utilisateur{\_}i} de \textit{ Matrice{\_}distance{\_}user-user{\_}CF} \textbf{faire:} 
+		
+		\begin{itemize}
+			\item [] /*trier selon l'ordre croissant les distances entre l'utilisateur i et le reste des utilisateur du dataset contenu dans la ligne utilisateur{\_}i */
+			\item []	sortedListe $\leftarrow$ Sort(utilisateur{\_}i) ;
+			\item []	/*Récupérer les indices des K plus proches voisins de l'utilisateur{\_}i/
+			\item [] Voisins[utilisateur{\_}i]{\_}CF$\leftarrow$ Min{\_}K{\_}distance(K,indice(soretedListe)) ;
+			
+		\end{itemize}
+	
+	
+	 \textbf{Pour} Chaque \textit{utilisateur{\_}i} de \textit{ Matrice{\_}distance{\_}user-user{\_}SEM} \textbf{faire:} 
+	
+	\begin{itemize}
+		\item [] /*trier selon l'ordre croissant les distances entre l'utilisateur i et le reste des utilisateur du dataset contenu dans la ligne utilisateur{\_}i */
+		\item []	sortedListe $\leftarrow$ Sort(utilisateur{\_}i) ;
+		\item []	/*Récupérer les indices des K plus proches voisins de l'utilisateur{\_}i/
+		\item [] Voisins[utilisateur{\_}i]{\_}SEM$\leftarrow$ Min{\_}K{\_}distance(K,indice(soretedListe)) ;
+		
+	\end{itemize}
+
+\end{algorithm} 
+
+\setcounter{algorithm}{5}
+\begin{algorithm}[H]
+\caption{Filtrage avec multiview (K-NN) Partie 2}
+/*Fusionner les deux vues*/
+\hspace*{\algorithmicindent} \\Voisins[ ]$\leftarrow$ Voisins[utilisateur{\_}i]{\_}SEM + Voisins[utilisateur{\_}i]{\_}CF ;
+
+\textbf{Pour} Chaque \textit{utilisateur{\_}i} de \textit{ Voisins[ ]} \textbf{faire:} 
+
+\begin{itemize}
+	\item [] /*trier selon l'ordre croissant les distances entre l'utilisateur i et le reste des utilisateur du dataset contenu dans la ligne utilisateur{\_}i */
+	\item []	sortedListe $\leftarrow$ Sort(utilisateur{\_}i) ;
+	\item []	/*Récupérer les indices des K plus proches voisins de l'utilisateur{\_}i/
+	\item [] Voisins[utilisateur{\_}i]{\_}Multiview $\leftarrow$ Min{\_}K{\_}distance(K,indice(soretedListe)) ;
+	
+\end{itemize}
+
+\textbf{ Fin.}
+\end{algorithm} 
+\begin{itemize}
+	\item [-] \textbf{Complexité de l'algorithme}:
+	\begin{itemize}
+		\item [-] $n$: nombre d'utilisateurs.
+		\item [-] CAAT: complexité approximative de l'algorithme de trie.
+		\item [-] Nous effectuons trois fois l'algorithme K-NN.
+		\item [-] À chaque itération on fait un parcours de $n$ (taille de la matrice de distance).
+	\end{itemize}
+	\item [-]  Donc la complexité du filtrage avec classification supervisée = $O(3*n*CAAT)$
+\end{itemize}
+
+
+\subsection{Filtrage avec classification non supervisée}
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%\setcounter{enumi}{1}
+	\item \textbf{Filtrage basé sur K-medoids}
+\end{enumerate}\mbox{}\indent Le principe est d'appliquer l'algorithme K-medoids sur l'ensemble des utilisateurs de manière à construire des clusters qui contiennent des utilisateurs possédant des intérêts similaires, le choix des utilisateurs qui seront considérés comme medoids de départ s'effectue de façon aléatoire.
+Les distances entre les utilisateurs sont stockées dans les matrice distance \textit{user-user} issue d'un des type de filtrage.
+
+Par exemple pour effectuer un filtrage sémantique basé K-medoids, il suffit d'envoyer à l'algorithme ci-dessous la matrice de distance \textit{user-user} issue du filtrage sémantique.
+Il en est de même pour effectuer:
+\begin{itemize}
+	\item Filtrage collaboratif basé K-medoids.
+	\item Filtrage hybride pondéré basé K-medoids.
+	\item Filtrage collaboratif basé sémantique avec clustering K-medoids.
+	\item Filtrage sémantique basé collaboratif avec clustering K-medoids.
+\end{itemize}
+
+
+\begin{algorithm}[H]
+	\caption{Filtrage avec classification non supervisé  (K-medoids)}
+	\hspace*{\algorithmicindent} \\
+	\hspace*{\algorithmicindent} \textbf{Entrée:}
+		\begin{itemize}
+		\item [] Matrice{\_}distance{\_}user-user: Matrice qui contient les distances entre utilisateur issue d'un des types de filtrage , 
+		\item [] K: Le nombre de cluster à former ;
+		\end{itemize}
+		\hspace*{\algorithmicindent} \textbf{Sortie:} 
+	\begin{itemize}
+		\item [] Clustering des utilisateurs en K cluster ;
+	\end{itemize}
+	\hspace*{\algorithmicindent}\textbf{ Début:}	
+		
+		\begin{itemize}
+		\item  [] Medoids $\leftarrow$ Choisir les K centres  des clusters : Désigné aléatoirement K indices de la matrice de distances représentant les indices de K utilisateurs ;
+		\item [] calculer le cout initial;	
+
+		\item [] \textbf{Pour} Chaque \textit{M-user } de \textit{Medoids} \textbf{faire:}
+		\begin{itemize}
+			\item [] \textbf{Pour} Chaque \textit{N-user}  de \textit{non-Medoids} \textbf{faire:}
+			\begin{itemize}
+				\item [] Swap(M,O) ;
+				\item [] Distribution(Matrice{\_}distance{\_}user-user, Medoids) ;
+				\item [] calculerCout( );
+				\item []  \textbf{Si:} le cout de cette itération est supérieure au cout de l'itération précédente \textbf{alors} Undo(M-user,N-user) ; \textbf{Fsi;}	
+				\item []  \textbf{Si:} Aucune changement alors arrêter l'algorithme \textbf{Fsi;}			
+				
+			\end{itemize}
+			\item []\textbf{Fait;}
+		\end{itemize}
+		\item []\textbf{Fait;}
+		\end{itemize}
+
+	\hspace*{\algorithmicindent}\textbf{ Fin.}	
+\end{algorithm}
+
+Où: 
+\begin{itemize}
+	\item [-] Swap() : Remplace le medoid M-user par N-user
+	\item [-] Undo() : Annule le swap de M-user par N-user
+	\item [-] Distribution() : Assigne les utilisateurs au plus proche cluster en utilisant la matrice de distance et les medoids 
+	\item [-] Cout() : Fonction objective qui est destinée à être minimisée
+\end{itemize}
+
+\begin{equation}
+Cout=\min\sum_{c \in C}\sum_{u,v \in c}d(u,v)
+\end{equation}
+
+Avec : C l'ensemble des clusters résultant de l'lagorithme k-medoids, u et v deux utilisateurs, v appartient au cluster et u son medoids.
+
+\begin{itemize}
+	\item [-] \textbf{Complexité de l'algorithme}:
+	\begin{itemize}
+		\item [-] $n$: nombre d'utilisateurs.
+		\item [-] $k$: nombre de clusters à former.
+		\item [-] Nous devons trouver la distance entre chacun des $(n-k)$ points de données k fois pour placer les points de données dans le groupe le plus proche.
+		\item [-] Après cela, nous devons remplacer chacun des medoids précédemment supposés par chaque non-medoid et recalculer la distance entre les objets $(n-k)$.
+	\end{itemize}
+	\item [-]  Donc la complexité du filtrage avec classification non supervisée = $O(k(n-k)^2)$
+\end{itemize}
+
+
+\subsection{Filtrage avec classification non supervisée optimisée}
+Comme nous l'avons vu dans le chapitre précédent l'optimisation par colonie d'abeilles manipule un ensemble d'abeilles où chaque abeille correspond à une solution faisable d'un problème donné.
+Nous avons décider d'exploiter le mieux possible BSO dans le but d'optimiser le clustering effectué par K-medoids, et ainsi améliorer la qualité des prédictions.
+
+K-medoids commence initialement par des medoids qui sont sélectionnés aléatoirement, en utilisant BSO nous tentons de trouver les meilleurs medoids de départ qui permettent de faire le meilleur partitionnement possible des utilisateurs, et de ne pas effectuer une sélection aléatoire des medoids car nous avons peu de chance de tomber sur de bons medoids.
+
+Cette classification non supervisée optimisée est appliquée pour les différents types de filtrage conçu (FC, FSem et Filtrage hybride) car 
+nous faisons appelle à l'algorithme BSO qui lui fait appelle à l'algorithme K-medoids, ce dernier comme vu précédemment (voir Filtrage basé sur K-medoids) à en entrée une matrice de distance issue de l'un des types de filtrages implémentés.\\
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%\setcounter{enumi}{1}
+	\item \textbf{Codification et initialisation de la solution}
+\end{enumerate}\mbox{}\indent Afin d'exploiter le mieux possible la métaheuristique et prouver son efficacité il est nécessaire de faire une codification adéquate qui permet de modéliser le problème.
+Dans notre cas, chaque partitionnement des users effectué par k-medoids représente une solution, donc chaque abeille correspond à un partitionnement faisable.
+
+La solution est représentée par un vecteur de taille égale au nombre d'utilisateurs à classifier dans un dataset, les indices du vecteur représentent les identificateurs des utilisateurs et chaque case du vecteur peut contenir un 0 ou 1 qui signifient respectivement:
+\begin{itemize}
+	\item le i ème utilisateur du vecteur solution n'est pas medoid.
+	\item le i ème  utilisateur de vecteur solution est medoid.
+\end{itemize}
+
+On démarre l'algorithme avec une solution initiale qui est soit aléatoire en remplissant un vecteur de taille N (N = nombre d'utilisateurs) avec 0 et 1, ou une solution qui est le résultat d'un vecteur construit à partir des clusters sorties de l'algorithme K-medoids qui représente un partitionnement des utilisateurs en K clusters.\\
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{1}
+	\item \textbf{Pseudo code de l'algorithme BSO adapté au probléme de recommandation}
+\end{enumerate}\mbox{}\indent Le pseudo-code suivant explique le principe de l'algorithme BSO adapté à notre problème. À noter qu'à chaque ajout d'une solution référence on doit vérifier qu'elle n'est pas déjà dans la liste taboue.  
+
+
+\begin{algorithm}[H]
+	\caption{Recommandation avec K-medoids optimisée (BSO) partie 1}
+	\hspace*{\algorithmicindent} \textbf{Entrée:}
+	\begin{itemize}
+		\item [] Matrice{\_}distance{\_}user-user: Matrice qui contient les distances entre utilisateur issue d'un des types de filtrage , 
+		\item [] K: Le nombre de cluster à former,
+		\item [] nbrIteration, flip, local{\_}max{\_}iter ;
+	\end{itemize}
+	\hspace*{\algorithmicindent} \textbf{Sortie:} 
+	\begin{itemize}
+		\item [] Vecteur de solution optimisé par BSO;
+	\end{itemize}
+	\hspace*{\algorithmicindent}\textbf{ Début:}	
+	
+\hspace*{\algorithmicindent}	\\/*Generation aléatoire de Sref (vecteur à valeurs entre 0 et 1)*/
+ \hspace*{\algorithmicindent}	\\/*ou appeler K-medoids pour générer une solution avec K-1 medoids*/  
+	\hspace*{\algorithmicindent} \\(Sref $\leftarrow$ Random-sol() || Sref $\leftarrow$ K-medoids(K-1, Matrice{\_}distance{\_}user-user)) ;
+	\hspace*{\algorithmicindent}\\ /*Evaluer la solution Sref et la définir comme meilleure évaluation pour le moment*/  
+		\hspace*{\algorithmicindent}\\  Best{\_}eval = Eval(sref);
+	\hspace*{\algorithmicindent}\\  \textbf{Pour} \textit{cpt} de \textit{nbrIteration} \textbf{faire:}
+			\begin{itemize}
+				\item [] /*Ajouter la solution de référence à tabou liste*/
+				\item [] taboo-list.append(Sref);	
+				\item [] /*Generer les solutions a partir de Sref avec paramètre flip*/
+				\item [] areas $\leftarrow$ search-area(Sref,flip);
+				\item [] /* Début de la boucle de locale*/
+				\item  [] \textbf{Pour} Chaque \textit{area} de \textit{areas} \textbf{faire:}
+				\begin{itemize}
+					\item [] /*Recherche local dans le voisinage de la solution courante*/
+					\item []   current{\_}eval, solution = bee-local-search(area, local{\_}max{\_}iter);
+					\item [] \textbf{Si:}  Best{\_}eval < min{\_}eval \textbf{alors:}
+					\begin{itemize}
+						\item []  Best{\_}eval $\leftarrow$ min{\_}eval;
+						\item [] Sref $\leftarrow$  solution ;
+					\end{itemize}
+					
+					\item []  \textbf{Fsi;}		
+				\end{itemize}
+				\item []  \textbf{fait;}	
+			\end{itemize}
+		
+\end{algorithm}	
+\setcounter{algorithm}{7}
+\begin{algorithm}[H]
+\caption{Recommandation avec K-medoids optimisée (BSO) partie 2}	
+\hspace*{\algorithmicindent}\\ /*A la sortie de la boucle de la recherche locale, nous aurons une solution \textit{Sref} qui donne la meilleure évaluation, si \textit{nbriterations} n'est pas atteint alors nous générons des solutions à partir de \textit{Sref} et nous re-effectuant une recherche locale, sinon on sort avec la meilleure solution qui est \textit{Sref}*/
+\hspace*{\algorithmicindent}\\  \textbf{fait;}
+
+\hspace*{\algorithmicindent}\textbf{Fin.}
+\end{algorithm}
+
+Où:
+\begin{itemize}
+	\item search-area(): génère un espace de recherche à partir de Sref.
+	\item bee-local-search(): permet d'effectuer une recherche local à partir d'une solution donnée,
+	\item Eval(): évalue la qualité d'une solution donnée.
+\end{itemize}
+\begin{itemize}
+	\item [-] \textbf{Complexité de l'algorithme}: Soient les variables suivantes :
+	\begin{itemize}
+	\item	GMI: nombre global de max itération.
+	\item	LMI: nombre local de max itération.
+	\item	EACK: estimation approximative de la complexité de kmedoids.
+	\item	flip: paramètre empirique qui détermine le nombre de search areas.
+	\end{itemize}
+	\item [-] Donc complexité de BSO = $O(GMI*flip*LMI*EACK)$
+\end{itemize}
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{2}
+	\item \textbf{Flip}
+\end{enumerate}\mbox{}\indent Détermine le nombre d'espace de recherche à générer à partir de \textit{Sref}, une valeur trop grande donnée au \textit{flip} implique dans notre cas la génération de plusieurs espaces de recherche et donc une bonne diversification et en même temps une intensification de la recherche, car il existerait des solutions qui seront proches dues au fait de la rotation à gauche qu'on effectue pour générer \textit{flip} solutions à partir de \textit{Sref}, tant dit qu'un petit \textit{flip} n'impliquerait qu'une intensification de la recherche dans un voisinage proche (voir figure \ref{fig:bsosearch}).\\
+
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{3}
+	\item \textbf{L'espace de recherche}
+\end{enumerate}\mbox{}\indent
+\textbf{Exemple:}
+Si on suppose que \textit{nbr{\_}medoid} = 4 et \textit{nbr-user} = 7, au départ nous générons un vecteur \textit{Sref} qui représente une solution de taille égale à 7 avec 3 medoids donc trois 1 seront présents dans le vecteur \textit{Sref}, par la suite nous générons un espace de recherche initiale à partir de \textit{Sref}  en prenant \textit{flip = nbr{\_}medoid / flip}, donc nous aurons \textit{flip} solutions générée à partir de \textit{Sref} en effectuant une rotation à gauche \textit{flip} fois, enfin nous envoyons à chaque abeille ( \textit{flip} abeille ) une solution pour qu'elle commence une recherche locale afin de trouver le 4ème medoids qui donne les meilleures évaluations possibles (voir figure \ref{fig:bsosearch}).
+
+ \begin{figure}[H]
+	\centering
+	\includegraphics[width=1.1\textwidth]{bsosearch.png}
+	\caption{Génération des \textit{search areas} à partir de \textit{Sref}}
+	\label{fig:bsosearch}
+\end{figure}
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{4}
+	\item \textbf{Fonction fitness}
+\end{enumerate}\mbox{}\indent Pour évaluer la qualité du vecteur de solution on a besoin d'évaluer la qualité de la prédiction effectuée à partir du clustering de K-medoids, pour cela nous avons utilisé les métriques RMSE/MAE (à minimiser).
+\begin{equation}\label{eq:1}
+RMSE = \sqrt{\frac{\sum_{i=1}^{N} (Predicted_{i} - Actual_{i})^{2}  } {N}}  
+\end{equation}
+
+\begin{equation}
+MAE= \frac {1}{N} \sum_{i=1}^{N} | Predicted_{i} -  Actual_{i}|
+\end{equation}
+
+\mbox{}\\Où: 
+\begin{itemize}
+	\item $Predicted_{i}$: rating prédit pour l'item $i$.
+	\item $Actual_{i}$: réel rating  pour l'item $i$.
+	\item $N$: nombre d'item total.
+\end{itemize}
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{5}
+	\item \textbf{La recherche locale}
+\end{enumerate}\mbox{}\indent La recherche locale est effectuée sur chaque vecteur de solution, pour essayer de trouver le nième medoid optimal. 
+Une itération de la recherche locale est décrite comme suit:
+\begin{enumerate}
+	\item Ajouter le nième medoid en changeant la première valeur égale à zéro rencontrée dans le vecteur à un.
+	\item Évaluer l'ajout du medoid avec la fonction fiteness, et enregistrer l'évaluation dans une liste nommée \textit{Liste{\_}Eval}.
+	\item Défaire l'ajout du nième medoid de l'étape (1).
+	\item Refaire les étapes  (1) (2) et (3) pour le reste des valeurs égale à zéro du vecteur solution.
+\end{enumerate}
+\indent Après avoir terminer le parcours du vecteur solution, on récupère l'indice du medoid qui a donné la meilleure valeur de fonction fitness à partir de \textit{Liste{\_}Eval}, nous affectons à \textit{Sref} la nouvelle solution trouvée dans la recherche locale, et si \textit{nbriterations} n'est pas atteint, alors nous générons des solutions à partir de \textit{Sref} et nous re-effectuant une recherche locale, sinon on sort avec la meilleure solution qui est \textit{Sref}.
+
+\subsubsection*{Calcul de prédiction pour le filtrage avec classification et classification optimisée}Pour la prédiction en se basant sur le vote du cluster auquel appartient chaque utilisateur afin de calculer les ratings des items non encore évalués, et cela en utilisant la formule de la somme pondérée citée précédemment.
+
+\section{Exemple de calcul de prédiction}
+Soit la matrice d'usage suivante:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.40\textwidth]{exemple.PNG}
+	\caption{Exemple de matrice d'usage}
+	\label{fig:exemple}
+\end{figure}
+Pour calculer les distances entre les utilisateurs en applique la formule de distance de Pearson suivante:
+\begin{equation}
+pearson(u,v)= 1 - \frac{\sum_{i \in I} (r_{u,i}-\bar{r}_{u}).(r_{v,i}-\bar{r}_{v})}{\sqrt{\sum_{i \in I} (r_{u,i}-\bar{r}_{u})^{2}.(r_{v,i}-\bar{r}_{v})^{2}}}
+\end{equation}
+On aura la matrice de distance entre utilisateur comme suit:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.45\textwidth]{exemplesim.PNG}
+	\caption{Exemple de matrice de distance}
+	\label{fig:sim}
+\end{figure}
+
+Pour calculer la prédiction de l'utilisateur $U_{1}$ sur l'item $I_{6}$, on effectue tout d'abord un des types de filtrage conçu pour trouver les voisins de chaque utilisateur, on suppose que les voisins de l'utilisateur $U_{1}$ sont comme suit:
+ 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.35\textwidth]{voisin.PNG}
+	\caption{Les voisins de l'utilisateur $U_{1}$}
+	\label{fig:voisin}
+\end{figure}
+En utilisant la formule de prédiction de somme pondérée suivante:
+\begin{equation}
+pred(u_{i},i_{k})=\bar{r(u_{i})} + \frac{\sum_{u_{j} \in U_{i}} sim(u_{i},u_{j}).(r_{u_{j,ik}}-\bar{r(u_{j})})}{\sum_{u_{j} \in U_{i}} sim(u_{i},u_{j})}
+\end{equation}
+On aura:
+\begin{equation}
+pred(u_{1},i_{6})=	3.2 + \frac{0.16 * (4-3) + 0.39 * (4-2.6) + 0.5 * ( 5-4)}{ 0.16 + 0.39 + 0.5}= 4.38
+\end{equation}
+\section {Ingénierie du système}
+Nous présentons le diagramme de cas d'utilisation qui modélise les différentes fonctionnalités de notre système de recommandation.
+\begin{figure}[H]
+	
+	\centering
+	\hspace*{-0.85in}
+	\includegraphics[width=1.2\textwidth]{shemaglobalesys.PNG}
+	
+	\caption{Diagramme de cas d'utilisation de notre système de recommandation}
+	
+	\label{fig:shemaglobalesys}
+	
+\end{figure}
+\section {Conclusion}
+Dans ce chapitre nous avons présenté en détail notre approche de recommandation qui utilise trois types de filtrage: Collaboratif, sémantique et hybride (combinant ces deux algorithmes selon différentes méthodes). Dans un second lieu, nous avons appliqué deux techniques de classification, supervisée (L'algorithme KNN a été utilisé) et non supervisée (l'algorithme K-medoids a été utilisé). Une hybridation basé sur ces algorithmes a été considéré, dont l'hybridation multivues avec KNN. Finalement, afin d'améliorer la qualité de la classification, nous avons appliqué une optimisation en utilisant la métaheuristique BSO (algorithme K-medoids-BSO). 
+Dans le chapitre suivant nous allons évaluer notre système de recommandation et présenter l'interface réalisée qui permet aux utilisateurs de tester notre système et de visualiser les résultats obtenus.
+
+\input{chapitre4}

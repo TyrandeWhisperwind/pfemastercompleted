@@ -1,0 +1,60 @@
+\babel@toc {french}{}
+\contentsline {chapter}{\numberline {1}Recommandation personnalis\IeC {\'e}e}{12}{chapter.1}% 
+\contentsline {section}{\numberline {1.1}Introduction}{13}{section.1.1}% 
+\contentsline {section}{\numberline {1.2}Recommandation}{13}{section.1.2}% 
+\contentsline {subsection}{\numberline {1.2.1}Les syst\IeC {\`e}mes de recommandations}{14}{subsection.1.2.1}% 
+\contentsline {subsection}{\numberline {1.2.2}Le fonctionnement des syst\IeC {\`e}mes de recommandation}{14}{subsection.1.2.2}% 
+\contentsline {subsection}{\numberline {1.2.3}Les caract\IeC {\'e}ristiques d\IeC {\textquoteright }un SR}{15}{subsection.1.2.3}% 
+\contentsline {section}{\numberline {1.3}Techniques de recommandation}{15}{section.1.3}% 
+\contentsline {subsection}{\numberline {1.3.1}Filtrage cognitif }{16}{subsection.1.3.1}% 
+\contentsline {subsection}{\numberline {1.3.2}Filtrage collaboratif}{19}{subsection.1.3.2}% 
+\contentsline {subsection}{\numberline {1.3.3}Filtrage hybride}{24}{subsection.1.3.3}% 
+\contentsline {section}{\numberline {1.4}Autre Syst\IeC {\`e}me de recommandation}{24}{section.1.4}% 
+\contentsline {subsection}{\numberline {1.4.1}Filtrage s\IeC {\'e}mantique}{24}{subsection.1.4.1}% 
+\contentsline {section}{\numberline {1.5}Construction du profil utilisateur}{28}{section.1.5}% 
+\contentsline {subsection}{\numberline {1.5.1}Caract\IeC {\'e}ristiques du profil utilisateur }{28}{subsection.1.5.1}% 
+\contentsline {subsection}{\numberline {1.5.2}Mod\IeC {\`e}le de repr\IeC {\'e}sentation du profil de l\IeC {\textquoteright }utilisateur}{29}{subsection.1.5.2}% 
+\contentsline {subsubsection}{\numberline {1.5.2.1} Avantages et inconv\IeC {\'e}nients de ce mod\IeC {\`e}le \cite {ref27}}{30}{subsubsection.1.5.2.1}% 
+\contentsline {section}{\numberline {1.6}Travaux li\IeC {\'e}s}{31}{section.1.6}% 
+\contentsline {subsection}{\numberline {1.6.1}Recommandation hybride par Filtrage s\IeC {\'e}mantique et FC multicrit\IeC {\`e}res}{31}{subsection.1.6.1}% 
+\contentsline {subsection}{\numberline {1.6.2}Un syst\IeC {\`e}me de recommandation bas\IeC {\'e} sur une clustering multivues de similarit\IeC {\'e} et de confiance}{31}{subsection.1.6.2}% 
+\contentsline {section}{\numberline {1.7}Conclusion}{32}{section.1.7}% 
+\contentsline {chapter}{\numberline {2}Classification et optimisation}{33}{chapter.2}% 
+\contentsline {section}{\numberline {2.1}Introduction}{34}{section.2.1}% 
+\contentsline {section}{\numberline {2.2}classification}{34}{section.2.2}% 
+\contentsline {subsection}{\numberline {2.2.1} Mod\IeC {\`e}les supervis\IeC {\'e}s}{34}{subsection.2.2.1}% 
+\contentsline {subsection}{\numberline {2.2.2} Mod\IeC {\`e}les non supervis\IeC {\'e}s \textit {(Clustering)}}{36}{subsection.2.2.2}% 
+\contentsline {section}{\numberline {2.3}Optimisation avec \textit {m\IeC {\'e}taheuristiques}}{39}{section.2.3}% 
+\contentsline {subsection}{\numberline {2.3.1}Bee Swarm Optimisation (BSO)}{40}{subsection.2.3.1}% 
+\contentsline {subsection}{\numberline {2.3.2}Optimisation dans les syst\IeC {\`e}mes de recommandations}{41}{subsection.2.3.2}% 
+\contentsline {section}{\numberline {2.4}Conclusion}{42}{section.2.4}% 
+\contentsline {chapter}{\numberline {3}Conception}{43}{chapter.3}% 
+\contentsline {section}{\numberline {3.1}Introduction}{44}{section.3.1}% 
+\contentsline {section}{\numberline {3.2}Description de l'approche de recommandation par classification}{44}{section.3.2}% 
+\contentsline {section}{\numberline {3.3}Filtrage sans classification}{45}{section.3.3}% 
+\contentsline {subsection}{\numberline {3.3.1}Filtrage collaboratif}{45}{subsection.3.3.1}% 
+\contentsline {subsection}{\numberline {3.3.2}Filtrage s\IeC {\'e}mantique standard}{51}{subsection.3.3.2}% 
+\contentsline {subsection}{\numberline {3.3.3}Filtrage hybride}{57}{subsection.3.3.3}% 
+\contentsline {section}{\numberline {3.4}Filtrage avec classification}{65}{section.3.4}% 
+\contentsline {subsection}{\numberline {3.4.1}Filtrage avec classification supervis\IeC {\'e}e}{66}{subsection.3.4.1}% 
+\contentsline {subsection}{\numberline {3.4.2}Filtrage avec classification non supervis\IeC {\'e}e}{70}{subsection.3.4.2}% 
+\contentsline {subsection}{\numberline {3.4.3}Filtrage avec classification non supervis\IeC {\'e}e optimis\IeC {\'e}e}{72}{subsection.3.4.3}% 
+\contentsline {section}{\numberline {3.5}Exemple de calcul de pr\IeC {\'e}diction}{78}{section.3.5}% 
+\contentsline {section}{\numberline {3.6}Ing\IeC {\'e}nierie du syst\IeC {\`e}me}{79}{section.3.6}% 
+\contentsline {section}{\numberline {3.7}Conclusion}{81}{section.3.7}% 
+\contentsline {chapter}{\numberline {4}Impl\IeC {\'e}mentation et exp\IeC {\'e}rimentation }{82}{chapter.4}% 
+\contentsline {section}{\numberline {4.1}Introduction}{83}{section.4.1}% 
+\contentsline {section}{\numberline {4.2}Environnement de travail}{83}{section.4.2}% 
+\contentsline {subsection}{\numberline {4.2.1}Langage de programmation \textit {Python}}{83}{subsection.4.2.1}% 
+\contentsline {subsection}{\numberline {4.2.2}Outils et logiciels}{84}{subsection.4.2.2}% 
+\contentsline {section}{\numberline {4.3}Pr\IeC {\'e}sentation de notre syst\IeC {\`e}me de recommandation}{84}{section.4.3}% 
+\contentsline {subsection}{\numberline {4.3.1}Description g\IeC {\'e}n\IeC {\'e}rale}{84}{subsection.4.3.1}% 
+\contentsline {subsection}{\numberline {4.3.2}Illustration des fonctionnalit\IeC {\'e}s d\IeC {\'e}velopp\IeC {\'e}es}{85}{subsection.4.3.2}% 
+\contentsline {section}{\numberline {4.4}Exp\IeC {\'e}rimentation}{90}{section.4.4}% 
+\contentsline {subsection}{\numberline {4.4.1}Dataset}{90}{subsection.4.4.1}% 
+\contentsline {subsection}{\numberline {4.4.2}M\IeC {\'e}triques d'\IeC {\'e}valuation}{92}{subsection.4.4.2}% 
+\contentsline {subsection}{\numberline {4.4.3}R\IeC {\'e}sultats des \IeC {\'e}valuations}{92}{subsection.4.4.3}% 
+\contentsline {section}{\numberline {4.5}R\IeC {\'e}capitulatif des diff\IeC {\'e}rents r\IeC {\'e}sultats des \IeC {\'e}valuations}{117}{section.4.5}% 
+\contentsline {section}{\numberline {4.6}Conclusion}{118}{section.4.6}% 
+\contentsline {chapter}{Appendices}{119}{section*.67}% 
+\contentsline {chapter}{Bibliographie}{I}{table.a..33}% 

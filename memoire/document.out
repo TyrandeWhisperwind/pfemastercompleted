@@ -1,0 +1,58 @@
+\BOOKMARK [0][-]{chapter.1}{Recommandation personnalis\351e}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Introduction}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Recommandation}{chapter.1}% 3
+\BOOKMARK [2][-]{subsection.1.2.1}{Les syst\350mes de recommandations}{section.1.2}% 4
+\BOOKMARK [2][-]{subsection.1.2.2}{Le fonctionnement des syst\350mes de recommandation}{section.1.2}% 5
+\BOOKMARK [2][-]{subsection.1.2.3}{Les caract\351ristiques d\220un SR}{section.1.2}% 6
+\BOOKMARK [1][-]{section.1.3}{Techniques de recommandation}{chapter.1}% 7
+\BOOKMARK [2][-]{subsection.1.3.1}{Filtrage cognitif }{section.1.3}% 8
+\BOOKMARK [2][-]{subsection.1.3.2}{Filtrage collaboratif}{section.1.3}% 9
+\BOOKMARK [2][-]{subsection.1.3.3}{Filtrage hybride}{section.1.3}% 10
+\BOOKMARK [1][-]{section.1.4}{Autre Syst\350me de recommandation}{chapter.1}% 11
+\BOOKMARK [2][-]{subsection.1.4.1}{Filtrage s\351mantique}{section.1.4}% 12
+\BOOKMARK [1][-]{section.1.5}{Construction du profil utilisateur}{chapter.1}% 13
+\BOOKMARK [2][-]{subsection.1.5.1}{Caract\351ristiques du profil utilisateur }{section.1.5}% 14
+\BOOKMARK [2][-]{subsection.1.5.2}{Mod\350le de repr\351sentation du profil de l\220utilisateur}{section.1.5}% 15
+\BOOKMARK [1][-]{section.1.6}{Travaux li\351s}{chapter.1}% 16
+\BOOKMARK [2][-]{subsection.1.6.1}{Recommandation hybride par Filtrage s\351mantique et FC multicrit\350res}{section.1.6}% 17
+\BOOKMARK [2][-]{subsection.1.6.2}{Un syst\350me de recommandation bas\351 sur une clustering multivues de similarit\351 et de confiance}{section.1.6}% 18
+\BOOKMARK [1][-]{section.1.7}{Conclusion}{chapter.1}% 19
+\BOOKMARK [0][-]{chapter.2}{Classification et optimisation}{}% 20
+\BOOKMARK [1][-]{section.2.1}{Introduction}{chapter.2}% 21
+\BOOKMARK [1][-]{section.2.2}{classification}{chapter.2}% 22
+\BOOKMARK [2][-]{subsection.2.2.1}{ Mod\350les supervis\351s}{section.2.2}% 23
+\BOOKMARK [2][-]{subsection.2.2.2}{ Mod\350les non supervis\351s \(Clustering\)}{section.2.2}% 24
+\BOOKMARK [1][-]{section.2.3}{Optimisation avec m\351taheuristiques}{chapter.2}% 25
+\BOOKMARK [2][-]{subsection.2.3.1}{Bee Swarm Optimisation \(BSO\)}{section.2.3}% 26
+\BOOKMARK [2][-]{subsection.2.3.2}{Optimisation dans les syst\350mes de recommandations}{section.2.3}% 27
+\BOOKMARK [1][-]{section.2.4}{Conclusion}{chapter.2}% 28
+\BOOKMARK [0][-]{chapter.3}{Conception}{}% 29
+\BOOKMARK [1][-]{section.3.1}{Introduction}{chapter.3}% 30
+\BOOKMARK [1][-]{section.3.2}{Description de l'approche de recommandation par classification}{chapter.3}% 31
+\BOOKMARK [1][-]{section.3.3}{Filtrage sans classification}{chapter.3}% 32
+\BOOKMARK [2][-]{subsection.3.3.1}{Filtrage collaboratif}{section.3.3}% 33
+\BOOKMARK [2][-]{subsection.3.3.2}{Filtrage s\351mantique standard}{section.3.3}% 34
+\BOOKMARK [2][-]{subsection.3.3.3}{Filtrage hybride}{section.3.3}% 35
+\BOOKMARK [1][-]{section.3.4}{Filtrage avec classification}{chapter.3}% 36
+\BOOKMARK [2][-]{subsection.3.4.1}{Filtrage avec classification supervis\351e}{section.3.4}% 37
+\BOOKMARK [2][-]{subsection.3.4.2}{Filtrage avec classification non supervis\351e}{section.3.4}% 38
+\BOOKMARK [2][-]{subsection.3.4.3}{Filtrage avec classification non supervis\351e optimis\351e}{section.3.4}% 39
+\BOOKMARK [1][-]{section.3.5}{Exemple de calcul de pr\351diction}{chapter.3}% 40
+\BOOKMARK [1][-]{section.3.6}{Ing\351nierie du syst\350me}{chapter.3}% 41
+\BOOKMARK [1][-]{section.3.7}{Conclusion}{chapter.3}% 42
+\BOOKMARK [0][-]{chapter.4}{Impl\351mentation et exp\351rimentation }{}% 43
+\BOOKMARK [1][-]{section.4.1}{Introduction}{chapter.4}% 44
+\BOOKMARK [1][-]{section.4.2}{Environnement de travail}{chapter.4}% 45
+\BOOKMARK [2][-]{subsection.4.2.1}{Langage de programmation Python}{section.4.2}% 46
+\BOOKMARK [2][-]{subsection.4.2.2}{Outils et logiciels}{section.4.2}% 47
+\BOOKMARK [1][-]{section.4.3}{Pr\351sentation de notre syst\350me de recommandation}{chapter.4}% 48
+\BOOKMARK [2][-]{subsection.4.3.1}{Description g\351n\351rale}{section.4.3}% 49
+\BOOKMARK [2][-]{subsection.4.3.2}{Illustration des fonctionnalit\351s d\351velopp\351es}{section.4.3}% 50
+\BOOKMARK [1][-]{section.4.4}{Exp\351rimentation}{chapter.4}% 51
+\BOOKMARK [2][-]{subsection.4.4.1}{Dataset}{section.4.4}% 52
+\BOOKMARK [2][-]{subsection.4.4.2}{M\351triques d'\351valuation}{section.4.4}% 53
+\BOOKMARK [2][-]{subsection.4.4.3}{R\351sultats des \351valuations}{section.4.4}% 54
+\BOOKMARK [1][-]{section.4.5}{R\351capitulatif des diff\351rents r\351sultats des \351valuations}{chapter.4}% 55
+\BOOKMARK [1][-]{section.4.6}{Conclusion}{chapter.4}% 56
+\BOOKMARK [0][-]{section*.67}{Appendices}{}% 57
+\BOOKMARK [0][-]{table.a..33}{Bibliographie}{}% 58

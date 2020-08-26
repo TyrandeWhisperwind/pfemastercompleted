@@ -1,0 +1,51 @@
+\babel@toc {french}{}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces R\IeC {\'e}capitulatif des trois meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour chaque FC sans classification\relax }}{95}{table.4.1}% 
+\contentsline {table}{\numberline {4.2}{\ignorespaces R\IeC {\'e}capitulatif des trois meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour l'algorithme de FC avec classification\relax }}{97}{table.caption.43}% 
+\contentsline {table}{\numberline {4.3}{\ignorespaces Les valeurs de seuils correspondant aux indices du graphes \ref {fig:MAEsem}\relax }}{99}{table.caption.45}% 
+\contentsline {table}{\numberline {4.4}{\ignorespaces R\IeC {\'e}capitulatif des trois meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour l'algorithme de FSem sans classification\relax }}{99}{table.4.4}% 
+\contentsline {table}{\numberline {4.5}{\ignorespaces R\IeC {\'e}capitulatif des trois meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour l'algorithme de FSem avec classification\relax }}{101}{table.4.5}% 
+\contentsline {table}{\numberline {4.6}{\ignorespaces Tableau des differents seuils combin\IeC {\'e} \IeC {\`a} Alpha du FHyb pond\IeC {\'e}r\IeC {\'e}\relax }}{104}{table.caption.50}% 
+\contentsline {table}{\numberline {4.7}{\ignorespaces R\IeC {\'e}capitulatif des trois meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour le FHyb pond\IeC {\'e}r\IeC {\'e}\relax }}{104}{table.caption.51}% 
+\contentsline {table}{\numberline {4.8}{\ignorespaces R\IeC {\'e}capitulatif des trois meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour les differents FHyb avec classification\relax }}{107}{table.caption.54}% 
+\contentsline {table}{\numberline {4.9}{\ignorespaces R\IeC {\'e}capitulatif des meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour touts les filtrages con\IeC {\c c}us\relax }}{109}{table.caption.55}% 
+\contentsline {table}{\numberline {4.10}{\ignorespaces Les meilleurs r\IeC {\'e}sultats (MAE et RMSE) trouvrer \IeC {\`a} partir de \cite {ref42} pour le dataset MovieLens 100k\relax }}{109}{table.caption.56}% 
+\contentsline {table}{\numberline {4.11}{\ignorespaces R\IeC {\'e}capitulatif des trois meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour le FC avec classification du dataset RED\relax }}{112}{table.caption.59}% 
+\contentsline {table}{\numberline {4.12}{\ignorespaces R\IeC {\'e}capitulatif des trois meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour le FSem avec classification du dataset RED\relax }}{114}{table.caption.62}% 
+\contentsline {table}{\numberline {4.13}{\ignorespaces R\IeC {\'e}capitulatif des trois meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour le FHyb avec classification du dataset RED\relax }}{116}{table.caption.65}% 
+\contentsline {table}{\numberline {4.14}{\ignorespaces R\IeC {\'e}capitulatif des meilleurs r\IeC {\'e}sultats (MAE et RMSE) pour les differents filtrage con\IeC {\c c}u et test\IeC {\'e}s sur RED\relax }}{117}{table.caption.66}% 
+\contentsline {table}{\numberline {2}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC item-item\relax }}{120}{table.a..2}% 
+\contentsline {table}{\numberline {3}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC item-item-IA\relax }}{120}{table.a..3}% 
+\contentsline {table}{\numberline {4}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC item-item-SVD\relax }}{120}{table.a..4}% 
+\contentsline {table}{\numberline {5}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC item-item-UA\relax }}{120}{table.a..5}% 
+\contentsline {table}{\numberline {6}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC user-user\relax }}{120}{table.a..6}% 
+\contentsline {table}{\numberline {7}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC user-user-IA\relax }}{120}{table.a..7}% 
+\contentsline {table}{\numberline {8}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC user-user-UA\relax }}{120}{table.a..8}% 
+\contentsline {table}{\numberline {9}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC user-user-SVD\relax }}{121}{table.a..9}% 
+\contentsline {table}{\numberline {10}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC user-user-Kmedoids\relax }}{121}{table.a..10}% 
+\contentsline {table}{\numberline {11}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FC user-user-KNN\relax }}{122}{table.a..11}% 
+\contentsline {table}{\numberline {12}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FSem user-user\relax }}{122}{table.a..12}% 
+\contentsline {table}{\numberline {13}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FSem user-user-Kmedoids\relax }}{123}{table.a..13}% 
+\contentsline {table}{\numberline {14}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb-alpha\relax }}{124}{table.a..14}% 
+\contentsline {table}{\numberline {15}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb alpha-Kmedoids\relax }}{124}{table.a..15}% 
+\contentsline {table}{\numberline {16}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb alpha-KNN\relax }}{125}{table.a..16}% 
+\contentsline {table}{\numberline {17}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb FC bas\IeC {\'e} Sem\relax }}{125}{table.a..17}% 
+\contentsline {table}{\numberline {18}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb FC bas\IeC {\'e} Sem et Kmedoids\relax }}{126}{table.a..18}% 
+\contentsline {table}{\numberline {19}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb FC bas\IeC {\'e} Sem et K-NN\relax }}{127}{table.a..19}% 
+\contentsline {table}{\numberline {20}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb Sem bas\IeC {\'e} FC\relax }}{127}{table.a..20}% 
+\contentsline {table}{\numberline {21}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb Sem bas\IeC {\'e} FC et K-medoids\relax }}{128}{table.a..21}% 
+\contentsline {table}{\numberline {22}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb Sem bas\IeC {\'e} FC et K-NN\relax }}{129}{table.a..22}% 
+\contentsline {table}{\numberline {23}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme de FHyb multivues K-NN\relax }}{130}{table.a..23}% 
+\contentsline {table}{\numberline {24}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FC bas\IeC {\'e} K-medoids sur le dataset RED\relax }}{131}{table.a..24}% 
+\contentsline {table}{\numberline {25}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FC bas\IeC {\'e} K-NN sur le dataset RED\relax }}{132}{table.a..25}% 
+\contentsline {table}{\numberline {26}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FC bas\IeC {\'e} K-medoids et BSO sur le dataset RED\relax }}{133}{table.a..26}% 
+\contentsline {table}{\numberline {27}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FSem bas\IeC {\'e} K-medoids sur le dataset RED\relax }}{133}{table.a..27}% 
+\contentsline {table}{\numberline {28}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FSem bas\IeC {\'e} K-medoids et BSO sur le dataset RED\relax }}{134}{table.a..28}% 
+\contentsline {table}{\numberline {29}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FSem bas\IeC {\'e} K-NN sur le dataset RED\relax }}{135}{table.a..29}% 
+\contentsline {table}{\numberline {30}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FHyb FC bas\IeC {\'e} Sem et K-medoids sur le dataset RED\relax }}{136}{table.a..30}% 
+\contentsline {table}{\numberline {31}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FHyb FC bas\IeC {\'e} Sem et K-medoids-BSO sur le dataset RED\relax }}{136}{table.a..31}% 
+\contentsline {table}{\numberline {32}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FHyb FC bas\IeC {\'e} Sem et K-NN sur le dataset RED\relax }}{137}{table.a..32}% 
+\contentsline {table}{\numberline {33}{\ignorespaces R\IeC {\'e}sultats de MAE et RMSE pour l'algorithme FHyb multivues K-NN sur le dataset RED\relax }}{138}{table.a..33}% 

@@ -1,0 +1,786 @@
+\chapter{Implémentation et expérimentation }
+\thispagestyle{empty}
+\newpage
+\section{Introduction}
+Dans le chapitre précédent, nous avons proposé une approche de recommandation incluant plusieurs algorithmes basés sur des techniques différentes (hybridation, clustering, clustering optimisé et clustering multivues). 
+Dans ce chapitre, nous présenterons en détail l'implémentation et l'expérimentation de notre système de recommandation.
+Ce chapitre est structuré comme suit:
+\begin{itemize}
+	\item L'environnement de travail (langage, outils et bibliothèques utilisés),
+	\item L’application réalisée, (son fonctionnement et mode d’emploi),
+	\item L'analyse des performances de l’approche développée et la comparaison de nos résultat avec ceux d’autres techniques déjà existantes.
+\end{itemize}
+
+\section{Environnement de travail}
+Nous allons présenter dans cette partie les outils que nous avons utilisé pour réaliser notre système de recommandation.
+\subsection{Langage de programmation \textit{Python}}
+Créé originellement par le programmeur Guido van Rossum autour de 1990, \textit{Python} est un langage de programmation objet interprété de haut niveau avec une sémantique dynamique. Ses structures de données intégrées de haut niveau, combinées à un typage et liaison dynamique, le rendent très attrayant pour le développement rapide d'applications, ainsi que pour son utilisation en tant que langage de script ou de collage pour connecter des composants existants\cite{ref39}.
+
+
+\myparagraph{Caractéristiques du langage et avantages}
+\begin{itemize}
+	\item La syntaxe simple et facile à apprendre de Python met l'accent sur la lisibilité et réduit donc le coût de la maintenance du programme. 
+	\item Python prend en charge les modules et les packages, ce qui encourage la modularité du programme et la réutilisation du code. 
+	\item L'interpréteur Python et la vaste bibliothèque standard sont disponibles gratuitement sous forme binaire ou source pour toutes les principales plates-formes et peuvent être distribués librement.
+\end{itemize}
+
+\subsection{Outils et logiciels}
+\myparagraph{Système d’exploitation (Linux)}Linux est un noyau monolithique à code source ouvert. Le noyau Linux a été développé à l'origine par Linus Torvalds, qui l'a annoncé dans le groupe de discussion comp.os.minix le 25 août 1991. Depuis lors, il a été porté sur des architectures informatiques comprenant x86-64, x86, ARM, RISC et DEC Alpha. Les développeurs ont accès à tout le code source de Linux et sont autorisés, dans les conditions de la licence, à le modifier et à le distribuer \cite{ref40}.
+
+\myparagraph{L’environnement de développement (Visual Studio
+Code)}
+Visual Studio Code est un éditeur de code source gratuit et libre de droit, disponible pour Windows, macOS et Linux. Il est livré avec un support intégré pour JavaScript, TypeScript et Node.js et dispose d'un écosystème riche en extensions pour d'autres langages (tels que C ++, C\#, Java, Python, PHP, Go) \cite{ref41}.
+
+\section{Présentation de notre système de recommandation}
+\subsection{Description générale}
+Le système que nous avons développé permettra de lancer les différents
+algorithmes implémentés et de visualiser en détails les performances et les résultats de chaque technique stockés dans des fichiers \textit{.csv}.
+
+Il sera également possible de choisir le dataset (jeux de données) à utiliser. Toutes les techniques implémentées sont généralisées pour traiter n’importe quel dataset possédant la structure montrée dans la figure \ref{fig:shemfi}.
+La modularité du code source de l’application permettra facilement d’apporter des mises à jours aux algorithmes afin d'ajouter d'autre techniques.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{shemfi.PNG}
+	\caption{Exemple de structuration d'un fichier exploitable dans notre système de recommandation}
+	\label{fig:shemfi}
+\end{figure}
+
+
+
+\subsection{Illustration des fonctionnalités développées}
+L'interface de l'application est composée de 4 onglets, qui sont:
+\begin{itemize}
+	\item\textit{Data preprocessing}: le prétaitement des données d'un dataset est une étape essentielle avant son utilisation, dans notre cas il existe énormément de valeurs manquantes de rating  car les users ne notent pas tous les items existants et par conséquent la prédiction effectuée ne sera pas précise.
+	Pour effectuer un prétraitement du dataset, il faut passer en entrée trois fichiers, qui sont: 
+	\begin{itemize}
+		\item Fichier \textit{u.item}: contient les identificateurs des items.
+		\item Fichier \textit{u.user}: contient les identificateurs des utilisateurs.
+		\item Fichier \textit{u.base}: contient les évaluations faites par les utilisateurs sur les items.
+	\end{itemize}
+	Le traitement des valeurs manquantes s'effectue avec l'une des options suivantes:
+	\begin{itemize}
+		\item Moyenne de rating des utilisateurs: on remplace les valeurs manquantes en effectuant la moyenne des évaluations des utilisateurs, pour voir en général la note que ces derniers attribuent aux items.
+		
+		\item Moyenne de rating des items: les valeurs manquantes d'un item sont remplacées par la moyenne des évaluations qu'il lui sont attribuées.
+		
+		\item SVD: nous utilisons la technique SVD expliqué dans le chapitre 3, afin d'effectuer une décomposition de la matrice d'usage du dataset pour extraire les caractéristiques cachées des items et des utilisateurs et ainsi les faire correspondre selon leurs caractéristiques, et remplacer les valeurs manquantes des ratings.
+		
+		On note qu'on peut laisser le fichier tel quel sans prétraitement.
+	\end{itemize}
+
+Quand le prétraitement des données est effectué, le résultat est sauvegardé dans un fichier pour une exploitation ultérieure.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{datapre.PNG}
+	\caption{Capture d'écran de l'onglet \textit{Data preprocessing}}
+	\label{fig:datapre}
+\end{figure}
+
+	\item \textit{Filtering data}: dans cet onglet on effectue l'un des filtrage conçu (FC, FSem, hybride), le fichier prétraité dans l'étape précédent est importé puis le calcul des distances entre les utilisateurs s'effectue avec les formules de similarité des filtrage et le résultat est sauvegardé dans un fichier (stockage de la matrice des distances dans un fichier).
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{filter.PNG}
+		\caption{Capture d'écran de l'onglet \textit{Filtering data}}
+		\label{fig:filter}
+	\end{figure}
+	\item \textit{Test without classification}: comme expliqué dans le chapitre précédent, après avoir obtenu la matrice de distances qui est issue de l'un des types de filtrage on peut effectuer les prédictions des évaluations des items en utilisant un seuil qui permet la sélection des voisins des utilisateurs (ou les items pour le cas FC item-item).
+	On commence par introduire le fichier prétraité d'un dataset, car il contient les évaluations des items donnés par les users, puis la matrice de distance du dataset pour la sélection des voisins des users. Le type de la matrice de distance qu'on introduit dépend des cas suivant:
+	\begin{itemize}
+		\item Si FC item-item alors introduire matrice de distance item-item calculée avec formule de Pearson.
+		\item Si FC user-user alors introduire matrice de distance user-user calculée avec formule de Pearson.
+		\item Si FSem alors introduire matrice de distance user-user calculée avec formule distance d'interet.
+		\item Si filtrage hybride alors introduire matrice de distance hybride calculée avec formule Pearson et distance d'intérêt.
+	\end{itemize}
+	
+	Après avoir importer les fichier du dataset prétraité et sa matrice de distance, on importe le fichier test qui contient les ratings des items pour effectuer les prédictions et vérifier la qualité de cette dernière avec les métriques RMSE et MAE vus dans le chapitre précédent et les affichées dans l'interface.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{sansclus.PNG}
+		\caption{Capture d'écran de l'onglet \textit{Test without classification}}
+		\label{fig:sansclus}
+	\end{figure}
+	\item \textit{Classification and optimisation}: pour faire un filtrage avec classification ou classification optimisée,  les mêmes étapes de l'onglet \textit{test without clustering} sont reeffectuées sauf qu'au lieu d'introduire un seuil de sélection de voisins, on utilise un algorithme de classification sur la matrice de distances des users (respectivement des items pour le FC item-item avec classification).
+	Après avoir introduit les fichiers contenant le dataset, la matrice de distances et les items de test, on entre les paramétrés selon la technique de classification voulue:
+	
+	\begin{itemize}
+		\item K-medoids: le nombre K de cluster est requis pour lancer une classification avec K-medoids des utilisateurs.
+		\item K-medoids optimisé: le nombre K de cluster à former et \textit{max iterations} qui est le nombre maximum d'itération à effectuer pour trouver une solution optimisée.
+		\item K-NN: le nombre K de voisins à considérer pour les prédictions des ratings de chaque utilisateur.
+		\item K-NN multiview: (le même paramètre que K-NN est requis pour exécuter K-NN multiview).
+	\end{itemize} 
+	Les résultats des évaluations des prédictions sera affiché après exécution des algorithmes dans l'interface est qui sont: RMSE, MAE, rappel, précision. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{sansclus.PNG}
+	\caption{Capture d'écran de l'onglet \textit{Classification and optimisation}}
+	\label{fig:clasificationonglet}
+\end{figure}
+
+
+\end{itemize}
+
+
+
+\section{Expérimentation}
+\subsection{Dataset}
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%\setcounter{enumi}{2}
+	\item \textbf{Présentation de \textit{MovieLens}}
+\end{enumerate}\mbox{} \indent GroupLens Research (un laboratoire de recherche de l’université du Minnesota) a mis à disposition un ensemble de données d’évaluation à partir du site Web MovieLens collectés sur différentes périodes.
+On retrouve des jeux de données allant de 100 000 évaluations jusqu'à 20 millions, ce dernier est plus destinées à la recherche ou de grand moyens matériels sont souvent nécessaires.
+Étant limité par le temps et par la puissance de calcul de nos machines, nous
+opterons donc dans un premier temps pour des dataset de 100 000 évaluations afin d’effectuer nos tests.
+
+\myparagraph{Architecture du dataset}Le dataset \textit{100K} de \textit{MovieLens} se présente sous la structure suivante :
+\begin{itemize}
+	\item Un fichier \textit{u.data}: de 100 000 lignes, contenant l’ensemble des évaluations (l’id de l’utilisateur, l’id de l’item, l’évaluation (de 1 à 5), la date d’évaluation).
+	\item  Un fichier \textit{u.genre}: ou on peut retrouver les différent catégories des films présents sur la plate-forme.
+	\item  Un fichier \textit{u.item}: ou sont indiqués tous les films avec l’ensemble des informations qui leurs sont relatives : date de sortie, genre etc ...
+	\item Un fichier \textit{u.occupation}: indiquant les différentes professions des utilisateurs.
+	\item  Un fichier \textit{u.user}: contenant les informations relatives à chaque utilisateur: age, sexe, profession etc ...
+	\item  Un fichier \textit{u.base}: contient 80\%  des données \textit{u.data}, ce fichier est utilisé pour effectuer l'apprentissage (classification et construction de modèle).
+	\item  Un fichier \textit{u.test}: contient 20\%  des données \textit{u.data}, ce fichier est utilisé pour effectuer les testes (prédiction et calcule d'erreur).
+\end{itemize}
+\subsubsection*{Exploitation du dataset}
+Le processus de test et d’évaluation d’un algorithme nécessite deux ensembles de données : un ensemble d’apprentissage et un ensemble de test.
+En effet, l’ensemble de données du fichier \textit{u.data} contient en tout 100 000 évaluations, nous prendrons donc \textit{u.base} qui contient 80 000 évaluations pour l’apprentissage et \textit{u.test} qui contient 20 000 évaluations pour la prédiction et le calcul des métriques.
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{1}
+	\item \textbf{Présentation de \textit{RED}}
+\end{enumerate}\mbox{} \indent Epinions.com était un un site général d'évaluation des consommateurs créé en 1999. Epinions a été acquis par Shopping.com (connu sous le nom de DealTime au moment de l'acquisition) en 2003, qui a ensuite été acquis par eBay en 2005. Chez Epinions, les visiteurs pouvaient lire nouvelles et anciennes critiques sur une variété d’articles pour les aider à effectuer leurs achats. Le 25 mars 2014, toutes les fonctionnalités de la communauté, ainsi que les fonctionnalités de soumission et de modification des avis, ont été désactivées. Par la suite, en mai 2018, le site a été complètement fermé et les URL du domaine epinions.com sont redirigées vers Shopping.com.
+
+RED: (\textit{Rich Epinions Dataset for Recommender Systems}) est un jeu de données extrait d'Epinions et enrichi. Il contient des critiques d'utilisateurs sur les éléments, les valeurs de confiance entre les utilisateurs, la catégorie d'éléments, la hiérarchie des catégories et l'expertise des utilisateurs sur les catégories. Cet ensemble de données peut être utilisé pour évaluer divers systèmes de recommandation.
+
+\myparagraph{Architecture du dataset}
+Le dataset est une base de données relationnelle avec les tables suivantes:
+\begin{itemize}
+	\item Utilisateur: nom (pseudo et URL du profil), location, rang (peut être nul) et les visites de profil.
+	\item Item: nom, catégorie et URL du profil.
+	\item  Catégorie: nom, catégorie parent, url de description, lignage (chemin dans l'arborescence des catégories) et profondeur (dans l'arborescence des catégories).
+	\item Critique: une critique associe un utilisateur à un élément, elle contient la note, entre 1 et 5, la note de la revue (moyenne de toutes les notes associées à cette critique) et la date de révision.
+	\item Expertise: les utilisateurs experts dans une catégorie apparaissent ici avec l'expertise (responsable de la catégorie, examinateur principal, conseiller) associée à la catégorie considérée.
+	\item Trust: Web de confiance, c’est-à-dire une valeur de confiance (-1 ou 1) d’un utilisateur à un autre, seules les valeurs de confiance positives apparaissent dans le jeu de données.
+	\item Similarité: la similarité entre tous les couples d'utilisateurs avec la corrélation de coefficient de Pearson. 
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{shemata.PNG}
+	\caption{Architecture de la base de données RED}
+	\label{fig:shemta}
+\end{figure}
+\subsubsection*{Exploitation du dataset}
+Nous avons pris un échantillon du dataset RED, qui est formé de 100K ratings de 149 utilisateurs sur 5000 items, et nous avons divisé cette échantillon en deux ensemble de données, un ensemble d'apprentissage environ 80\% de l'échantillon et un ensemble de 20\% pour les testes. 
+\subsection{Métriques d'évaluation}
+Nous nous baserons sur deux métriques afin d’évaluer notre travail : MAE et RMSE cité dans le chapitre précédant (voir formule \ref{eq:1}), qui sont des métriques permettant de calculer la différence
+entre deux variables continues. En effet, ces deux métriques restent les plus utilisées dans le domaine et les plus pertinentes quant à évaluer la qualité d’un système de recommandation.
+
+\subsection{Résultats des évaluations}
+Dans cette partie, nous réaliserons un ensemble de tests portant sur les performances de notre approche et nous comparerons nos résultats avec les résultats des approches existantes. 
+\textbf{A) Évaluations avec MovieLens-100K}
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%  \setcounter{enumi}{4}
+	\item \textbf{Filtrage collaboratif}
+\end{enumerate}
+\subsubsection*{FC sans classification}
+Dans cette phase d’expérimentations, nous allons évaluer la qualité de la recommandation lorsque celle-ci est basée sur un filtrage collaboratif standard (user-user, item-item, SVD). Nous ferons des expérimentations par rapport à la corrélation de Pearson, étant donné que celle-ci reste l’une des plus connues et des plus utilisées.
+Nous avons évalué les algorithmes suivants:
+\begin{itemize}
+	\item  FC item-item avec un praitrétement la moyenne des évaluations des utilisateur 
+	(FC-item-item-UA).
+	\item  FC item-item avec un praitrétement la moyenne des évaluations des items (FC-item-item-IA).
+	\item  FC item-item avec un praitrétement la méthode SVD (FC-item-item-SVD).
+	\item FC item-item sans prétraitement (FC-item-item).
+	\item  FC user-user avec un praitrétement la moyenne des évaluations des utilisateur (FC-user-user-UA).
+	\item  FC user-user avec un praitrétement la moyenne des évaluations des items (FC-user-user-IA).
+	\item  FC user-user avec un praitrétement la méthode SVD (FC-user-user-SVD).
+	\item FC user-user sans prétraitement (FC-user-user).	
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{MAEFC.PNG}
+	\caption{Évaluation MAE du FC standard en fonction du seuil}
+	\label{fig:FCMAE}
+\end{figure}
+
+\begin{figure}[H]
+		\centering
+	\includegraphics[width=\textwidth]{RMSEFC.PNG}
+	\caption{Évaluation RMSE du FC standard en fonction du seuil}
+	\label{fig:FCRMSE}
+\end{figure}
+
+\begin{center}\label{tab1}
+	\begin{tabularx}{\textwidth}{|p{3.7cm}|l|l|l||p{3.65cm}|l|l|l|}
+		\hline
+		threshold & 0.258 & 0.345 & 0.301 & threshold & 0.073 & 0.109 & 0.256 \\ \hline
+		MAE  (FC-item-UA) & 0.796 & 0.797 & 0.798 & MAE  (FC-user-IA) & 0.798 & 0.799 & 0.8 \\ \hline
+		RMSE (FC-item-UA) & 1.067 & 1.067 & 1.068 & RMSE (FC-user-IA) & 1.069 & 1.07 & 1.07 \\ \hline\hline
+		threshold & 0.284 & 0.227 & 0.17 & threshold & 0.4 & 0.6 & 0.5 \\ \hline
+		MAE  (FC-user-SVD) & \textbf{0.73} & 0.736 & 0.75 & MAE  (FC-item-IA) & 0.775 & 0.78 & 0.782 \\ \hline
+		RMSE (FC-user-SVD) & \textbf{1.001} & 1.007 & 1.023 & RMSE (FC-item-IA) & 1.064 & 1.066 & 1.07 \\ \hline\hline
+		threshold & 0.454 & 0.606 & 0.53 & threshold & 0.151 & 0.227 & 0.303 \\ \hline
+		MAE  (FC-user-ua) & 0.761 & 0.78 & 0.781 & MAE  (FC-user-user) & 0.795 & 0.81 & 1.022 \\ \hline
+		RMSE (FC-user-ua) & 1.047 & 1.066 & 1.066 & RMSE (FC-user-user) & 1.079 & 1.111 & 1.492 \\ \hline\hline
+		threshold & 0 & 0.105 & 0.158 & threshold & 0 & 0.1 & 0.2 \\ \hline
+		MAE  (FC-item-SVD) & 0.923 & 0.93 & 0.94 & MAE  (FC-item-item) & 0.804 & 0.808 & 0.829 \\ \hline
+		RMSE (FC-item-SVD) & 1.197 & 1.207 & 1.217 & RMSE (FC-item) & 1.076 & 1.085 & 1.133 \\ \hline
+	\end{tabularx}	
+	\captionof{table}{Récapitulatif des trois meilleurs résultats (MAE et RMSE) pour chaque FC sans classification} 
+\end{center}
+\subsubsection*{Discussion des résultats}
+En analysant les deux figures ci-dessus, il est clair qu’au delà d’un certain seuil, environ 0.5, la qualité de la prédiction stagne pour les différent types de FC.
+
+On remarque que lorsque le dataset n'est pas prétraité les résultats sont de qualité médiocre, ce qui confirme l'importance du prétraitement du dataset, les meilleures valeurs de MAE et RMSE sont au alentour de respectivement 0.80 et 1.2 dans le cas de FC user-user et FC item-item.
+
+Les deux filtrages collaboratif user-user avec comme prétraitement la moyennes des items (FC-user-user-IA) et FC item-item avec  prétraitement la moyenne des users (FC-item-item-UA), donnent des résultat presque similaire environ  0.79 pour le meilleur MAE et 1.06 pour RMSE.
+ 
+L'utilisation de la technique de SVD pour le prétraitement et l'application d'un FC item-item  par la suite (FC-item-item-SVD), donne de très mauvais résultats, donc cette technique est à exclure pour la suite des évaluations avec classification.
+
+Le filtrage qui a donné les meilleures évaluations est FC user-user (FC-user-user-SVD) avec comme prétraitment SVD, et la meilleure valeur de MAE est égale à 0.73 et RMSE égale à 1.001, pour un seuil de 0.284, donc nous allons opté pour ce filtrage dans la suite des évaluations.
+
+\subsubsection*{FC Avec classification}
+Pour cette approche, nous ferons varier la valeur de k dans les algorithmes de FC avec classification, et essayer de déduire laquelle de ses valeurs nous permettra d’atteindre les meilleurs résultats.
+Nous avons évalué les algorithmes suivants:
+\begin{itemize}
+	\item  FC user-user basé K-medoids (FC-user-user-Kmedoids).
+	\item  FC user-user basé K-medoids et BSO (FC-user-user-Kmedoids-BSO).
+	\item  FC user-user basé K-KNN (FC-user-user-KNN).
+\end{itemize}
+
+\begin{figure}[H]
+		\centering
+	\includegraphics[width=\textwidth]{MAEclassFC.PNG}
+	\caption{Évaluation MAE du FC avec classification en fonction du seuil}
+	\label{fig:MAEclassFC}
+\end{figure}
+
+
+\begin{figure}[H]
+		\centering
+	\includegraphics[width=\textwidth]{RMSEclassFC.PNG}
+	\caption{Évaluation RMSE du FC avec classification en fonction du seuil}
+	\label{fig:RMSEclassFC}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		threshold & 0.284 & 0.227 & 0.17 \\ \hline
+		MAE  (FC-user-SVD) & \textbf{0.73} & 0.736 & 0.75\\ \hline
+		RMSE (FC-user-SVD) & \textbf{1.001} & 1.007 & 1.023 \\\hline \hline
+		K & 10 & 15 & 45 \\ \hline
+		MAE(FC-kmedoids) & 0.733 & 0.732 & 0.734 \\ \hline
+		RMSE(FC-svd-kmedoids) & 1.004 & 1.003 & 1.007 \\ \hline\hline
+		K & 25 & 15 & 20 \\ \hline
+		MAE(FC-kmedoids-bso) & \textbf{0.728} & 0.729 & 0.73 \\ \hline
+		RMSE(FC-kmedoids-bso) & \textbf{1.001} & 1.001 & 1.001 \\ \hline\hline
+		K & 50 & 40 & 30 \\ \hline
+		MAE(FC-KNN) & 0.73 & 0.731 & 0.732 \\ \hline
+		RMSE(FC-KNN) & 1.001 & 1.001 & 1.002 \\ \hline
+	\end{tabular}
+\captionof{table}{Récapitulatif des trois meilleurs résultats (MAE et RMSE) pour l'algorithme de FC avec classification}
+\end{table}
+\subsubsection*{Discussion des résultats}
+Comme nous pouvons le constater sur les figures \ref{fig:MAEclassFC} et \ref{fig:RMSEclassFC} ci-dessus, la qualité de la prédiction évolue selon le nombre de voisins choisis. En prenant plus de 85 voisins la qualité semble diminuer pour les trois algorithme.
+
+L'ajout du clustering au FC avec comme prétraiement SVD ne semble pas améliorer les résultats car la meilleure valeur de MAE obtenu est 0.733 pour FC basé Kmedoids alors que FC avec SVD elle était égale à 0.73, on suppose que le choix aléatoire des medoids est la cause de la non amélioration des évaluations, de ce fait une optimisation du choix des medoids est nécessaire pour voir l'apport de classification.
+
+Nous pouvons constater que le FC basé Kmedoids-BSO améliore les résultats de FC basé K-medoids et FC standard, avec MAE égale à 0.728, ce qui confirme l'apport de l'optimisation sur le clustering et donc on peut dire que le clustering peut améliorer les résultats d'un FC standard si le jeu de teste est d'un volume plus important.
+
+En ce qui concerne le FC basé K-NN, il n'améliore pas la qualité des évaluations du FC standard mais donne de résultats plus au moins stable avec MAE ne dépassant pas les 0.74 et RMSE les 1.005.
+
+%%%%%%%%%%%%%%%%%%%%%%%FILTRAGE SEMANTIQUE%%%%%%%%%%%%%%%%%%%%%%%%%
+\mbox{}\\
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	 \setcounter{enumi}{1}
+	\item \textbf{Filtrage sémantique standard}
+	\end{enumerate}\mbox{} \indent Dans cette phase d’expérimentations, nous allons évaluer la qualité de la recommandation lorsque celle-ci est basée sur un filtrage sémantique. Nous ferons des expérimentations en utilisant la formule de distance d'intérêt entre utilisateur, et la distance de Jaccard entre les items car le dataset MovieLense ne possède pas une représentation sous forme d'ontologie des items.
+Le prétraitement des valeurs manquantes est effectué avec la méthode SVD.
+
+\subsubsection*{FSem sans classification}
+Nous avons évalué l'algorithme FSem user-user.
+
+\begin{figure}[H]
+		\centering
+	\includegraphics[width=0.8\textwidth]{semsvd.PNG}
+	\caption{Évaluation MAE et RMSE du FSem en fonction du seuil de similarité}
+	\label{fig:MAEsem}
+\end{figure}
+
+Afin de ne pas encombré le graphe ci-dessus (\ref{fig:MAEsem}) nous avons indexé les onze valeurs des seuils du FSem et nous les avons mis dans le tableau suivant:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|}
+		\hline
+		indice & threshold \\ \hline
+		1 & 0.6666666666666 564 \\ \hline
+		2 & 0.6666666666666 592\\ \hline
+		3 & 0.6666666666666 62 \\ \hline
+		4 & 0.6666666666666 647 \\ \hline
+		5 & 0.6666666666666 675 \\ \hline
+		6 & 0.6666666666666 703 \\ \hline
+		7 & 0.6666666666666 731 \\ \hline
+		8 & 0.6666666666666 758 \\ \hline
+		9 & 0.6666666666666 786 \\ \hline
+	   10 & 0.6666666666666 814 \\ \hline
+	   11 & 0.6666666666666 842 \\ \hline
+	\end{tabular}
+\captionof{table}{Les valeurs de seuils correspondant aux indices du graphes \ref{fig:MAEsem}}
+\end{table}
+
+\begin{center}
+	\begin{tabularx}{\textwidth}{|p{5.1cm}|p{3.2cm}|p{3.2cm}|p{3.3cm}|}
+		\hline
+		indice& 5 & 6 & 9 \\ \hline
+		MAE  (FSem-user-user) & \textbf{0.7297} & 0.7306 & 0.7303 \\ \hline
+		RMSE (FSem-user-user) & \textbf{1.0012} & 1.0022 & 1.0020\\ \hline
+	\end{tabularx}
+\captionof{table}{Récapitulatif des trois meilleurs résultats (MAE et RMSE) pour l'algorithme de FSem sans classification}
+\end{center}
+
+\subsubsection*{Discussion des résultats}
+En analysant la figure \ref{fig:MAEsem} ci-dessus, il est clair qu’au delà d’un certain seuil, plus précisément le seuil possédant l'indice 6, la qualité de la prédiction stagne au alentour de 0.73 pour MAE et 1.002 pour RMSE.
+
+On constate que la meilleure valeur du seuil à choisir dans le FSem standard est le seuil possédant l'indice 5, qui à donné MAE égale à 0.729 et RMSE égale à 1.001.
+
+\subsubsection*{FSem avec classification}
+Pour cette approche, nous ferons varier la valeur de K dans les algorithme de FSem avec classification, et essayer de déduire laquelle de ses valeurs nous permettra d’atteindre les meilleurs résultats.
+Nous avons évalué les algorithmes suivant:
+\begin{itemize}
+	\item  FSem user-user basé K-medoids (FSem-user-user-Kmedoids).
+	\item  FSem user-user basé K-medoids et BSO (FSem-user-user-Kmedoids-BSO).
+	\item  FSem user-user basé K-NN (FSem-user-user-KNN).
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{semMAEclass.PNG}
+	\caption{Évaluation MAE avec les algorithmes de FSem basés classification}
+	\label{fig:semMAEclass}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{RMSEclasssem.PNG}
+	\caption{Évaluation RMSE avec les algorithmes de FSem basés classification}
+	\label{fig:RMSEclasssem}
+\end{figure}
+
+\begin{center}\label{tab2}
+	\begin{tabularx}{\textwidth}{|p{5.1cm}|p{3.2cm}|p{3.2cm}|p{3.3cm}|}
+	\hline
+	indice & 5 & 6 & 9 \\ \hline
+	MAE  (FSem-user-user) & \textbf{0.7297} & 0.7306 & 0.7303 \\ \hline
+	RMSE (FSem-user-user) & 1.0012 & 1.0022 & 1.0020\\ \hline	
+	\hline
+	k & 10 & 15 & 20 \\ \hline
+	MAE  (FSem-user-user-kmedoids-bso) & 0.728 & 0.7292 & 0.7293 \\ \hline
+	RMSE (FSem-user-user-kmedoids-bso) & 1.002 & 1.0012 & 1.005 \\ \hline\hline
+	k & 55 & 65 & 60 \\ \hline
+	MAE  (Fsem-user-user-KNN) & \textbf{0.7297} & 0.7299 & 0.7301 \\ \hline
+	RMSE (Fsem-user-user-KNN) & \textbf{1.0007} & 1.0006 & 1.0003 \\ \hline\hline
+	k & 15 & 25 & 10 \\ \hline
+	MAE  (FSem-user-user-kmedoid) & 0.7301 & 0.7307 & 0.7309 \\ \hline
+	RMSE (FSem-user-user-kmedoid) & 1.0012 & 1.0027 & 1.002 \\ \hline
+\end{tabularx}
+\captionof{table}{Récapitulatif des trois meilleurs résultats (MAE et RMSE) pour l'algorithme de FSem avec classification}
+\end{center}
+
+\subsubsection*{Discussion des résultats}
+Comme nous pouvons le constater sur les figures \ref{fig:semMAEclass} et \ref{fig:RMSEclasssem} ci-dessus, la qualité de la prédiction évolue selon le nombre de voisins choisis. En prenant plus de 85 voisins la qualité semble diminuer pour les trois algorithme.
+
+L'ajout du clustering au FSem avec comme prétraiement SVD ne semble pas améliorer les résultats car la meilleure valeur de MAE obtenu est 0.730 pour FSem basé Kmedoids, alors que le FSem standard avait donné MAE égale à 0.729, on suppose que le choix aléatoire des medoids est la cause de la non amélioration des évaluations, de ce fait une optimisation du choix des medoids est nécessaire pour voir l'apport de classification.
+
+Après l'ajout de l'optimisation BSO au FSem basé K-medoids, cela a permis d'améliorer MAE de 0.001, cependant FSem standard reste mieux que FSem basé clustering optimisé.
+
+Le FSem basé K-NN, ne semble pas apporter des améliorations au FSem standard car les deux possèdent des évaluations plus au moins égaux.
+
+%%%%%%%%%%%%%%%%%%%%%%FILTRAGE HYBRIDE%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mbox{}\\
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{2}
+	\item \textbf{Filtrage hybride}
+\end{enumerate}
+\mbox{} \indent Dans cette phase d’expérimentations, nous allons évaluer la qualité de la recommandation lorsque celle-ci est basée sur un filtrage hybride entre FC et FSem à savoir FHyb pondéré (FHyb-alpha), FHyb collaboratif basé sémantique (FHyb-FC-Sem) et FHyb sémantique basé collaboratif (FHyb-Sem-FC).
+\subsubsection*{FHyb sans classification}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{hybsansclass.PNG}
+	\caption{Évaluation MAE de l'hybridation sans classification des algorithmes FC et FSem}
+	\label{fig:hybsansclassMAE}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{hybsansclassRMSE.PNG}
+	\caption{Évaluation RMSE de l'hybridation sans classification des algorithmes FC et FSem}
+	\label{fig:hybsansclassRMSE}
+\end{figure}
+
+Le tableau suivant présente les meilleures valeurs d'Alpha :
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|}
+		\hline
+		threshold & Best Alpha for threshold \\ \hline
+		0 & 1 \\ \hline
+		0.066666667 & 1 \\ \hline
+		0.133333333 & 1 \\ \hline
+		0.2 & 8 \\ \hline
+		0.266666667 & 8 \\ \hline
+		0.333333333 & 8 \\ \hline
+		0.4 & 7 \\ \hline
+		0.466666667 & 5 \\ \hline
+		0.533333333 & 5 \\ \hline
+		0.6 & 5 \\ \hline
+		0.666666667 & 5 \\ \hline
+	\end{tabular}
+\captionof{table}{Tableau des differents seuils combiné à Alpha du FHyb pondéré}
+\end{table}
+
+Le tableau suivant \ref{tab:hyb} décrit les trois meilleures valeurs obtenues pour chaque algorithme en termes de MAE et RMSE.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		threshold & 0.189 & 0.151 & 0.113 \\ \hline
+		MAE  (FHyb-FC-Sem) & 0.73 & 0.767 & 0.827 \\ \hline
+		RMSE (FHyb-FC-Sem) & 1.003 & 1.046 & \textbf{1.101} \\ \hline\hline
+		threshold & 0.284& 0.227 & 0.17 \\ \hline
+		MAE  (FHyb-Sem-FC) & 0.73 & 0.736 & 0.75 \\ \hline
+		RMSE (FHyb-Sem-FC) & \textbf{1.001} & 1.007 & 1.023 \\ \hline\hline
+		threshold & 0.466 & 0.533 & 0.6 \\ \hline
+		Alpha & 0.5 & 0.5 & 0.5 \\ \hline
+		MAE  (FHyb-alpha) & \textbf{0.7295} & 0.73 & 0.7301 \\ \hline
+		RMSE (FHyb-alpha) & 1.0014 & 1.0018 & 1.002 \\ \hline
+	\end{tabular}
+	\captionof{table}{Récapitulatif des trois meilleurs résultats (MAE et RMSE) pour le FHyb pondéré}
+	\label{tab:hyb}
+\end{table}
+
+
+\subsubsection*{Discussion des résultats}
+Nous pouvons déduire de ces résultats que les trois hybridations donnent des résultats approximativement proches avec comme meilleure valeur de MAE égale à 0.73 et RMSE égale à 1.
+Cependant, le FHyb pondéré à donnée la meilleurs valeurs de MAE qui est égale à 0.729 avec la valeur Alpha égales à 5.
+
+\subsubsection*{FHyb avec classification}
+Pour cette approche, nous ferons varier la valeur du nombre de clusters K dans les algorithmes suivants:
+\begin{itemize}
+\item FHyb pondéré K-NN (FHyb-alpha).
+\item FHyb pondéré K-medoids (FHyb-alpha-Kmedoids).
+\item FHyb collaboratif basé sémantique K-NN (FHyb-FC-Sem-KNN).
+\item FHyb collaboratif basé sémantique K-medoids (FHyb-FC-Sem-Kmedoids).
+\item FHyb collaboratif basé sémantique K-medoids et BSO (FHyb-FC-Sem-Kmedoids-BSO).
+\item FHyb sémantique basé collaboratif K-NN (FHyb-Sem-FC-KNN).
+\item FHyb sémantique basé collaboratif K-medoids (FHyb-Sem-FC-Kmedoids).
+\item FHyb sémantique basé collaboratif K-medoids et BSO (FHyb-Sem-FC-Kmedoids-BSO).
+\item FHyb Multivues K-NN (FHyb-Multiview-KNN).
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{hybclassMAE.PNG}
+	\caption{Évaluation MAE des algorithmes hybrides basés classification}
+	\label{fig:hybclassMAE}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{hybclassRMSE.PNG}
+	\caption{Évaluation RMSE des algorithmes hybrides basés classification}
+	\label{fig:hybclassRMSE}
+\end{figure}
+
+Le tableau suivant décrit les trois meilleures valeurs obtenues pour chaque algorithme en termes de MAE et RMSE.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		k & 27 & 25 & 30 \\ \hline
+		MAE(FHyb-FC-Sem-KNN) & \textbf{0.7171} &  0.7181 & 0.7185 \\ \hline
+		RMSE(FHyb-FC-Sem-KNN)& \textbf{0.9946} &  0.9967 & 0.9950 \\ \hline\hline
+		k & 15 & 45 & 30 \\ \hline
+		MAE(FHyb-Sem-FC-KNN) & 0.7256& 0.7261& 0.7272 \\ \hline
+		RMSE(FHyb-Sem-FC-KNN) & 1.003 & 1.0015 & 1.0030 \\ \hline\hline
+		k & 65 & 55 & 45 \\ \hline
+		MAE(FHyb-FC-Sem-Kmedoids-BSO) & 0.73001 & 0.7302 & 0.73064 \\ \hline
+		RMSE(FHyb-FC-Sem-Kmedoids-BSO) & 1.0029 & 1.0029 & 1.0013 \\ \hline\hline
+		k & 10 & 15 & 20 \\ \hline
+		MAE(FHyb-Sem-FC-Kmedoids-BSO) & 0.7289 & 0.7309 & 0.7302 \\ \hline
+		RMSE(FHyb-Sem-FC-Kmedoids-BSO) & 1.001 & 1.0034 & 1.0025 \\ \hline\hline
+		k & 65 & 55 & 45 \\ \hline
+		MAE(multiview\_knn\_svd) & 0.7300 & 0.7302 & 0.7306\\ \hline
+		RMSE(multiview\_knn\_svd) & 1.0009 & 1.0017 & 1.0015 \\ \hline\hline
+		k & 15 & 80 & 20 \\ \hline
+		MAE(FHyb-Multiview-KNN) & 0.7294 & 0.7298 & 0.730\\ \hline
+		RMSE(FHyb-Multiview-KNN) & 0.9994& 1.0015 & 0.9990 \\ \hline\hline
+		k & 25 & 15 & 20 \\ \hline
+		MAE(FHyb-Sem-FC-Kmedoids) & 0.7323 & 0.7324& 0.733 \\ \hline
+		RMSE(FHyb-Sem-FC-Kmedoids) & 1.005& 1.004 & 1.0065 \\ \hline\hline
+		k & 140 & 120 & 135 \\ \hline
+		alpha & 0.1 & 0.4 & 0.6 \\ \hline
+		MAE(FHyb-alpha-KNN) & 0.7287 & 0.7289 & 0.7289 \\ \hline
+		RMSE(FHyb-alpha-KNN)& 0.9991 & 0.9991 & 0.9994\\ \hline\hline
+		k & 15 & 20 & 10 \\ \hline
+		alpha & 0.1 & 0.2 & 0.3 \\ \hline
+		MAE(FHyb-alpha-Kmedoids) & 0.7300& 0.731 & 0.7312 \\ \hline
+		RMSE(FHyb-alpha-Kmedoids) & 1.0015 & 1.0039 & 1.0021 \\ \hline
+	\end{tabular}
+\captionof{table}{Récapitulatif des trois meilleurs résultats (MAE et RMSE) pour les differents FHyb avec classification}
+\end{table}
+\subsubsection*{Discussion des résultats}
+\myparagraph{FHyb pondéré} Pour ce filtrage l'ajout du clustering n'a pas amélioré les performances de la prédiction, car le Fhyb pondéré donne comme meilleure résultat 0.729 pour MAE et 1.001 pour RMSE, après l'ajout du clustering, MAE est passée à 0.730 et RMSE est restée presque la même.
+Cependant l'ajout de la classification K-NN, a amélioré les performances de MAE qui est devenu 0.7287 et de RMSE qui est passé à 0.99.
+ 
+\myparagraph{FHyb sémantique basé collaboratif} Après avoir incorporer le clustering K-medoids à ce filtrage, nous constatons que les évaluations ne se sont pas améliorées, car sans clustering MAE été égale à 0.73 et RMSE à 1.00, après l'ajout du clustering MAE est passée à 0.732 et RMSE est restée la même, donc on suppose que le choix des medoids d'une façon optimisée peut montrer l'apport du clustering, après avoir ajouté l'optimisation BSO, RMSE n'a pas changé mais MAE s'est améliorée et est passée à 0.728, donc le clustering optimisé est efficace sur ce filtrage.
+Après l'ajout de la classification avec K-NN à ce filtrage, nous remarquons que MAE s'est améliorée et est devenu égale à 0.725, pour RMSE pas de changement à noter, donc la classification pour ce filtrage améliore la qualité de MAE seulement.
+
+\myparagraph{FHyb collaboratif basé sémantique}
+Ce filtrage sans classification a donnée comme meilleur résultat pour MAE=0.73 et RMSE=1.00, après l'ajout du clustering, MAE c'est améliorée et est passé à 0.729 et RMSE à 0.999 mais l'ajout de l'optimisation ne semble pas améliorer les performances de ces deux évaluations car elles ont passée respectivement à 0.73 et 1.00. Cependant l'ajout de la classification semble être la meilleure option à choisir pour ce filtrage car elle a fait passé MAE à 0.717 et RMSE à 0.994, donc elle est plus efficace que le clustering et le clustering optimisé.
+
+\myparagraph{FHyb Multivues K-NN}
+Ce filtrage utilise que la classification K-NN pour hybrider les deux vue sémantique et collaboratif, nous pouvons constaté qu'il a donné une valeur de 0.73 pour MAE et une valeur de 1.00 pour RMSE, donc pour cette base de donnée cette approche ne semble pas meilleure que les filtrages hybrides standard proposé ou avec classification car nous avons eu des performances mieux que celle-ci. 
+Nous supposons que cette approche serait meilleure testée sur un autre dataset, de ce fait par la suite nous allons testé cette approche sur un autre jeu de données.
+
+\subsubsection*{Comparaison des résultats avec d'autre méthodes utilisée sur MovieLens}
+Pour voir si nos résultats sont de bonne qualité, nous avons décidé de les comparés à des méthodes déjà utilisé sur le dataset MovieLens 100k, les résultats peuvent être consultés sur le site \cite{ref42}.
+Le tableau suivant est un récapitulatif de nos meilleurs résultats pour chaque approches développées:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		& MAE & RMSE \\ \hline
+		FC standard & 0.73 & 1.001 \\ \hline
+		FC basé k-medoids & 0.733 & 1.004 \\ \hline
+		FC basé k-medoids et BSO & 0.728 & 1.001 \\ \hline
+		FC basé K-NN & 0.73 & 1.001 \\ \hline
+		FSem standard & 0.729 & 1.002 \\ \hline
+		FSem k-medoids & 0.730 & 1.001 \\ \hline
+		FSem k-medoids et BSO & 0.728 & 1.002 \\ \hline
+		FSem K-NN & 0.729 & 1.000 \\ \hline
+		FHyb pondéré & 0.729 & 1.001 \\ \hline
+		FHyb pondéré k-medoids & 0.730 & 1.001 \\ \hline
+		FHyb pondéré K-NN & 0.728 & 0.991 \\ \hline
+		FHyb Sem basé FC & 0.73 & 1.001 \\ \hline
+		FHyb Sem basé FC k-medoids & 0.732 & 1.005 \\ \hline
+		FHyb Sem basé FC k-medoids et BSO & 0.728 & 1.001 \\ \hline
+		FHyb Sem basé FC K-NN & 0.725 & 1.003 \\ \hline
+		FHyb FC basé Sem & 0.730 & 1.003 \\ \hline
+		FHyb FC basé Sem k-medoids & 0.729 & 0.999 \\ \hline
+		FHyb FC basé Sem k-medoids et BSO & 0.730 & 1.002 \\ \hline
+		FHyb FC basé Sem K-NN & \cellcolor[HTML]{67FD9A}0.717 & \cellcolor[HTML]{67FD9A}0.994 \\ \hline
+		FHyb mutivues K-NN & 0.730 & 1.000 \\ \hline
+	\end{tabular}
+\captionof{table}{Récapitulatif des meilleurs résultats (MAE et RMSE) pour touts les filtrages conçus}
+ \label{tab:movie}
+\end{table}
+Le tableau suivant montre les résultats obtenu à partir du site \cite{ref42}.
+Les deux méthodes utilisés sont SVDplusplus qui est une amélioration de la méthode SVD et UserKNNPearson qui est un filtrage collaboratif avec la corrélation de Pearson comme distance entre utilisateur et une classification des voisins des ces derniers avec l'algorithme K-NN.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		& MAE & RMSE \\ \hline
+		UserKNNPearson & 0.728 & 0.929 \\ \hline
+		SVDPlusPlus version 1& 0.718 & 0.913 \\ \hline
+		SVDPlusPlus  version 2& \cellcolor[HTML]{67FD9A} 0.713 & \cellcolor[HTML]{67FD9A}0.90829	\\ \hline
+	\end{tabular}
+\captionof{table}{Les meilleurs résultats (MAE et RMSE) trouvrer à partir de \cite{ref42} pour le dataset MovieLens 100k}
+ \label{tab:mymedia}
+\end{table}
+Nous pouvons conclure que nos résultats sont dans les normes comparé avec ceux déjà développé ou part avant, de plus nous nous rapprochons avec notre méthode FHyb FC basé Sem et K-NN du résultat de SVDPlusPlus version 2 du tableau .
+Sachant que la méthode de SVDPlusPlus prend beaucoup de temps pour s'exécutée, il serait possible d'opter pour notre approche qui est FHyb FC basé Sem et K-NN, qui s'exécutera plus rapidement que SVDPlusPlus, de plus notre approche est simple à implémenter et donne des résultats proches de la méthode SVDPlusPlus.\\
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{B) Evaluations avec RED}\\
+Afin de confirmer les résultats obtenus de nos approches sur le dataset MovieLens, nous avons décidé de refaire les testes sur un autre dataset qui est RED.
+Nous avons choisi de refaire les testes que sur les approches qui ont donné de bons résultats, car nous somme limé par le temps et la puissance de calcul de nos machines.
+\subsubsection*{Évaluations}
+Dans cette partie, nous réaliserons un ensemble de tests portant sur les performances de notre approche et nous comparerons nos résultats avec les résultats des approches existantes. \\
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%  \setcounter{enumi}{4}
+	\item \textbf{Filtrage collaboratif avec classification et classification optimisée}
+\end{enumerate}\mbox{}\indent{} Dans cette phase d’expérimentations, nous allons évaluer la qualité de la recommandation lorsque celle-ci est basée sur un FC basé K-medoids, FC basé K-medoids et BSO et FC basé K-NN. Nous ferons des expérimentations par rapport à la corrélation de Pearson, étant donné que celle-ci reste l’une des plus connues et des plus utilisées, et comme prétraitement du dataset nous avons opté pour la méthode SVD vu son efficacité d'après les testes précédent.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{epFCMAE.PNG}
+	\caption{Évaluation MAE du FC avec classification sur RED}
+	\label{fig:epFCMAE}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{epFCRMSE.PNG}
+	\caption{Évaluation RMSE du FC avec classification sur RED}
+	\label{fig:epFCRMSE}
+\end{figure}
+Le tableau suivant décrit les trois meilleures valeurs obtenues en termes de MAE et RMSE.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		k & 5 & 17 & 11 \\ \hline
+		MAE(FC-user-user-KNN) & 0.7744 & 0.779 & 0.7798 \\ \hline
+		RMSE(FC-user-user-KNN) & 1.066& 1.0709 & 1.0712 \\ \hline\hline
+		k & 17 & 36 & 64 \\ \hline
+		MAE(FC-user-user-Kmedoids-BSO) & \textbf{0.7677} & 0.7697  & 0.7684 \\ \hline
+		RMSE(FC-user-user-Kmedoids-BSO) &\textbf{1.060} & 1.0697  & 1.07534 \\ \hline\hline
+		k & 19 & 23 & 48 \\ \hline
+		MAE(FC-user-user-Kmedoids) & 0.7751& 0.7753 & 0.7785\\ \hline
+		RMSE(FC-user-user-Kmedoids) & 1.0659 & 1.06989 & 1.0814 \\ \hline
+	\end{tabular}
+\captionof{table}{Récapitulatif des trois meilleurs résultats (MAE et RMSE) pour le FC avec classification du dataset RED}
+\end{table}
+\subsubsection*{Discussion des résultats}
+D'après le tableau récapitulatif et les graphes ci-dessus, nous constatons que l'approche qui donne les meilleurs résultats est le FC basé K-medoids et BSO avec MAE égale à 0.767 et RMSE égale à 1.060, ce qui confirme l'apport de l'optimisation sur le clustering.\\
+
+
+%%%%%%%%%%%%%%%%%%%EP SEM%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{1}
+	\item \textbf{Filtrage sémantique  avec classification et classification optimisée}
+\end{enumerate}\mbox{} \indent Dans cette partie, nous allons évalué la qualité de la recommandation lorsque celle-ci est basée sur un FSem basé K-medoids, FSem basé K-medoids et BSO et FSem basé K-NN.  Nous ferons des expérimentations en utilisant la formule de distance d'intérêt entre utilisateur, et la distance de Wu and Palmer entre les items car le dataset RED possède une représentation sous forme d'ontologie des items.
+Le prétraitement des valeurs manquantes est effectué avec la méthode SVD.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{epsemMAE.PNG}
+	\caption{Évaluation MAE du FSem avec classification sur RED}
+	\label{fig:epsemMAE}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{epsemRMSE.PNG}
+	\caption{Évaluation RMSE du FSem avec classification sur RED}
+	\label{fig:epsemRMSE}
+\end{figure}
+La tableau suivant décrit les trois meilleures valeurs en termes de MAE et RMSE.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		k & 12 & 32 & 46 \\ \hline
+		MAE(FSem-user-user-Kmedoids) & 0.7765& 0.7771 & 0.7779\\ \hline
+		RMSE(FSem-user-user-Kmedoids) & 1.0753 & 1.0775 & 1.0823 \\ \hline\hline
+		k & 8 & 7 & 6 \\ \hline
+		MAE(FSem-user-user-KNN) & 0.7778 & 0.7812 & 0.7832 \\ \hline
+		RMSE(FSem-user-user-KNN) & 1.0790 & 1.0806 & 1.0834 \\ \hline\hline
+		k & 43 & 20 & 46 \\ \hline
+		MAE(FSem-user-user-Kmedoids-BSO) & \textbf{0.7637} & 0.7664 & 0.7664 \\ \hline
+		RMSE(FSem-user-user-Kmedoids-BSO) & \textbf{1.064} & 1.0681 & 1.0750 \\ \hline
+	\end{tabular}
+\captionof{table}{Récapitulatif des trois meilleurs résultats (MAE et RMSE) pour le FSem avec classification du dataset RED}
+\end{table}
+\subsubsection*{Discussion des résultats}
+D'après le tableau récapitulatif et les graphes ci-dessus, nous constatons que l'approche qui donne les meilleurs résultats est le FSem basé K-medoids et BSO avec MAE égale à 0.763 et RMSE égale à 1.064, ce qui confirme l'apport de l'optimisation sur le clustering.\\
+
+
+%%%%%%%%%%%%%%%%%EP HYB%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	  \setcounter{enumi}{2}
+	\item \textbf{Filtrage hybride avec classification et classification optimisée}
+\end{enumerate}\mbox{}\indent Dans cette partie, nous allons évalué la qualité de la recommandation lorsque celle-ci est basée sur un FHyb basé K-medoids, FHyb basé K-medoids et BSO et FHyb basé K-NN.  Nous ferons des expérimentations par rapport à la corrélation de Pearson, étant donné que celle-ci reste l’une des plus connues et des plus utilisées, et comme prétraitement du dataset nous avons opté pour la méthode SVD vu son efficacité d'après les testes précédent.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{ephybMAE.PNG}
+	\caption{Évaluation MAE du filtrage hybride avec classification sur RED}
+	\label{fig:ephybMAE}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{ephybRMSE.PNG}
+	\caption{Évaluation RMSE du filtrage hybride avec classification sur RED}
+	\label{fig:ephybRMSE}
+\end{figure}
+Le tableau suivant décrit les trois meilleurs valeurs obtenues pour chaque algorithme en termes de MAE et RMSE.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		k & 10 & 8 & 11 \\ \hline
+		MAE(FHyb-FC-Sem-KNN) & 0.7791 & 0.7812 & 0.7818 \\ \hline
+		RMSE(FHyb-FC-Sem-KNN) & 1.0728 & 1.07503 & 1.07846 \\ \hline\hline
+		k & 9 & 7 & 8 \\ \hline
+		MAE(FHyb-Multiview) & \textbf{0.7657}& 0.7744 & 0.7744 \\ \hline
+		RMSE(FHyb-Multiview) & \textbf{1.0703}& 1.0781 & 1.0812\\ \hline\hline
+		k & 34 & 10 & 6 \\ \hline
+		MAE(FHyb-FC-Sem-Kmedoids) & 0.784 & 0.7852 & 0.7865 \\ \hline
+		RMSE(FHyb-FC-Sem-Kmedoids) & 1.0850 & 1.0762 & 1.07503 \\ \hline\hline
+		k & 38 & 13 & 17 \\ \hline
+		MAE(FHyb-FC-Sem-Kmedoids-BSO) & 0.7798 & 0.78053 & 0.7812 \\ \hline
+		RMSE(FHyb-FC-Sem-Kmedoids-BSO) & 1.0825 & 1.0765 & 1.0769 \\ \hline
+	\end{tabular}
+\captionof{table}{Récapitulatif des trois meilleurs résultats (MAE et RMSE) pour le FHyb avec classification du dataset RED}
+\end{table}
+
+\subsubsection*{Discussion des résultats}
+D'après le tableau récapitulatif et les graphes ci-dessus, nous constatons que l'approche qui donne les meilleurs résultats dans le cas d'un filtrage hybride est le FHyb multivues K-NN avec MAE égale à 0.765 et RMSE égale à 1.070, c'est l'approche inspiré du travail de \cite{ref30}.
+
+\subsubsection*{Comparaison des résultats avec d'autre méthodes utilisée sur RED}
+Pour voir si nos résultats sont de bonne qualité et dans les normes, nous avons décidé de les comparés à des méthodes déjà utilisé sur le dataset RED, les résultats peuvent être consultés sur le site \cite{ref43}.
+Le tableau suivant est un récapitulatif de nos meilleurs résultats pour chaque approches développées:
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		             & MAE & RMSE \\ \hline
+		FC basé K-NN & 0.774 & 1.065 \\ \hline
+		FC basé k-medoids & 0.775 & 1.065 \\ \hline
+		FC basé k-medoids et BSO & 0.767 & 1.060 \\ \hline
+		FSem basé K-NN & 0.778 & 1.079 \\ \hline
+		FSem basé k-medoids & 0.776 & 1.075 \\ \hline
+		FSem basé k-medoids et BSO & \cellcolor[HTML]{67FD9A}0.763 & \cellcolor[HTML]{67FD9A}1.064 \\ \hline
+		FHyb collaboratif basé sémantique K-NN & 0.779 & 1.072 \\ \hline
+		FHyb collaboratif basé sémantique  et k-medoids & 0.784 & 1.085 \\ \hline
+		FHyb collaboratif basé sémantique et k-medoids-BSO & 0.779 & 1.082 \\ \hline
+		FHyb multivues & 0.765 & 1.070 \\ \hline
+	\end{tabular}
+\captionof{table}{Récapitulatif des meilleurs résultats (MAE et RMSE) pour les differents filtrage conçu et testés sur RED}
+\end{table}
+Sur le site \cite{ref43}, le meilleur résultat de MAE est de 0.804, et 1.047 pour RMSE avec la méthode SVD. En comparant nos résultats avec celui du site, nous pouvons dire que nous avons amélioré nettement MAE avec notre approche qui est FSem basé K-medoids et BSO avec MAE égale à 0.763, pour RMSE il n'y a pas une grande différence entre notre approche et SVD. Par conséquent nous avons prouvé l'efficacité de notre méthode comparé aux méthodes déjà appliqué sur le dataset RED.
+
+\section{Récapitulatif des différents résultats des évaluations}
+Dans cette partie nous allons récapituler les différents résultats obtenus pour chaque filtrage réalisé, en termes  d'hybridation, de classification et de classification optimisée sur les deux dataset utilisés.
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	%%\setcounter{enumi}{2}
+	\item Filtrage collaboratif
+\end{enumerate}\mbox{} \indent
+Pour le filtrage collaboratif standard, le clustering optimisé avec l'algorithme K-medoids et BSO a amélioré les résultats du FC standard.
+En utilisant la classification avec K-NN sur le FC standard, cela n'a pas apporté d'amélioration. Donc pour le FC le meilleur filtrage est le FC basé K-medoids et BSO, il a pu donner des résultats très proches à ceux des algorithmes déjà appliqués sur MovieLens, d'environ 0.015 de différence pour MAE et de 0.092 pour RMSE.\\
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{1}
+	\item \ Filtrage sémantique
+\end{enumerate}\mbox{} \indent
+Le FSem standard n'a pas pu être amélioré ni par la classification avec K-NN et ni par le clustering optimisé. Mais ses résultats restent dans les normes comparé aux résultats données par d'autres méthodes appliquées sur le dataset MovieLens, avec MAE égale à 0.7297 et RMSE égale à 1.0012.
+En appliquant le FSem basé K-medoids, le FSem basé K-medoids-BSO et le FSem basé K-NN sur le dataset RED, nous avons obtenus de très bons résultats comparé à ceux du site \cite{ref43}.\\
+
+\begin{enumerate}[nosep,label=\textbf{\arabic*)}]
+	\setcounter{enumi}{2}
+	\item Filtrage hybride
+\end{enumerate}\mbox{} \indent
+L'approche que nous avons conçue et qui a donné les meilleures performances sur le dataset MovieLens est le FHyb collaboratif basé sémantique et K-NN, ce résultat et très proche des meilleurs performance existantes de ce dataset (voir les deux tableaux \ref{tab:mymedia} et \ref{tab:movie}).
+
+\subsubsection*{Comparaison entre les résultats de MovieLens et RED}
+En rajoutant la classification et classification optimisée aux trois types de filtrages et après les avoirs testés sur le dataset RED, nous avons obtenu de très bons résultat comparé a ceux du site \cite{ref43}, et nous pouvons ainsi conclure et dire qu'il y'a un apport lors de l'ajout de la classification et la classification optimisée aux  différent types de filtrage conçus, car cela nous a permis de nous rapprocher des meilleurs résultats déjà existants dans le cas du dataset MovieLens, et de surpasser les performances des algorithmes déjà existants en utilisant le dataset RED.
+\section{Conclusion}
+Dans ce chapitre que nous clôturons, nous avons pu tester différents algorithmes
+de recommandation que nous avons réalisé sur les datasets MovieLens 100k et RED.
+En effet, ces expérimentations nous ont permis de faire des comparaison entre les différents filtrages conçus, et de conclure en disant que les filtrages conçus se sont montrés très efficace sur le dataset RED. Nous avons pu nous rapprocher des résultats déjà existants sur le dataset MovieLens avec notre approche (FHyb collaboratif basé sémantique et K-NN) qui est simple et plus rapide que SVDPlusPlus.  
+
+\newpage
+\input{annex}
